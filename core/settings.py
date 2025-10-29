@@ -86,22 +86,13 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-if os.getenv("RENDER"):  # Detecta se está rodando no Render
-    DATABASES = {
-        'default': dj_database_url.config(
-            default='postgresql://',
-            conn_max_age=600,
-            ssl_require=True
-        )
-    }
-else:
-    # Banco local (SQLite)
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+DATABASES = {
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL', default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
+        conn_max_age=600,
+        ssl_require=True
+    )
+}
 
 
 # Password validation
