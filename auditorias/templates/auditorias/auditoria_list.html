@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Auditorias - Zenith QMS{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-clipboard-check me-2"></i>Auditorias
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{% url 'auditorias:auditoria-create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>Nova Auditoria
+        </a>
+    </div>
+</div>
+
+<!-- Lista de Auditorias -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Programa de Auditorias</h5>
+    </div>
+    <div class="card-body">
+        {% if auditorias %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Número</th>
+                        <th>Setor Auditado</th>
+                        <th>Programa</th>
+                        <th>Data Planejada</th>
+                        <th>Data Realização</th>
+                        <th>Líder</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for auditoria in auditorias %}
+                    <tr>
+                        <td>
+                            <strong>{{ auditoria.numero }}</strong>
+                        </td>
+                        <td>{{ auditoria.setor_auditado }}</td>
+                        <td>{{ auditoria.programa.ano }}</td>
+                        <td>{{ auditoria.data_planejada|date:"d/m/Y" }}</td>
+                        <td>
+                            {% if auditoria.data_realizacao %}
+                                {{ auditoria.data_realizacao|date:"d/m/Y" }}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ auditoria.lider.get_full_name }}</td>
+                        <td>
+                            {% if auditoria.status == 'concluida' %}
+                                <span class="badge bg-success">Concluída</span>
+                            {% elif auditoria.status == 'executacao' %}
+                                <span class="badge bg-warning">Em Execução</span>
+                            {% elif auditoria.status == 'cancelada' %}
+                                <span class="badge bg-danger">Cancelada</span>
+                            {% else %}
+                                <span class="badge bg-info">Planejada</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'auditorias:auditoria-detail' auditoria.pk %}" class="btn btn-outline-primary" title="Ver detalhes">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'auditorias:auditoria-update' auditoria.pk %}" class="btn btn-outline-secondary" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                {% if auditoria.relatorio %}
+                                    </a>
+                                {% if auditoria.relatorio %}
+                                <a href="{{ auditoria.relatorio.url }}" class="btn btn-outline-success" title="Download" download>
+                                    <i class="bi bi-download"></i>
+                                </a>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-clipboard-check display-1 text-muted"></i>
+            <h4 class="text-muted mt-3">Nenhuma auditoria encontrada</h4>
+            <p class="text-muted">Comece criando a primeira auditoria do sistema.</p>
+            <a href="{% url 'auditorias:auditoria-create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>Criar Primeira Auditoria
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

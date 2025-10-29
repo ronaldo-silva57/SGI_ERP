@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+
+{% block title %}Não Conformidades - Zenith QMS{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-exclamation-triangle me-2"></i>Não Conformidades
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{% url 'nao_conformidades:nao-conformidade-create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>Registrar NC
+        </a>
+    </div>
+</div>
+
+<!-- Estatísticas Rápidas -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-warning text-white mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">Abertas</div>
+                        <div class="h5 mb-0">{{ ncs_abertas }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-exclamation-triangle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-info text-white mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">Em Análise</div>
+                        <div class="h5 mb-0">{{ ncs_analise }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-search fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-danger text-white mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">Atrasadas</div>
+                        <div class="h5 mb-0">{{ ncs_atrasadas }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-clock fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filtros -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label for="status" class="form-label">Status</label>
+                <select name="status" id="status" class="form-select">
+                    <option value="">Todos os Status</option>
+                    <option value="aberta" {% if request.GET.status == 'aberta' %}selected{% endif %}>Aberta</option>
+                    <option value="analise" {% if request.GET.status == 'analise' %}selected{% endif %}>Em Análise</option>
+                    <option value="acao_implementada" {% if request.GET.status == 'acao_implementada' %}selected{% endif %}>Ação Implementada</option>
+                    <option value="verificada" {% if request.GET.status == 'verificada' %}selected{% endif %}>Verificada</option>
+                    <option value="fechada" {% if request.GET.status == 'fechada' %}selected{% endif %}>Fechada</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="gravidade" class="form-label">Gravidade</label>
+                <select name="gravidade" id="gravidade" class="form-select">
+                    <option value="">Todas as Gravidades</option>
+                    <option value="baixa" {% if request.GET.gravidade == 'baixa' %}selected{% endif %}>Baixa</option>
+                    <option value="media" {% if request.GET.gravidade == 'media' %}selected{% endif %}>Média</option>
+                    <option value="alta" {% if request.GET.gravidade == 'alta' %}selected{% endif %}>Alta</option>
+                    <option value="critica" {% if request.GET.gravidade == 'critica' %}selected{% endif %}>Crítica</option>
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-funnel me-1"></i>Filtrar
+                </button>
+                <a href="{% url 'nao_conformidades:nao-conformidade-list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Limpar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Lista de Não Conformidades -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Não Conformidades Registradas</h5>
+    </div>
+    <div class="card-body">
+        {% if nao_conformidades %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Número</th>
+                        <th>Título</th>
+                        <th>Setor</th>
+                        <th>Data Detecção</th>
+                        <th>Gravidade</th>
+                        <th>Status</th>
+                        <th>Prazo</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for nc in nao_conformidades %}
+                    <tr>
+                        <td>
+                            <strong>{{ nc.numero }}</strong>
+                        </td>
+                        <td>{{ nc.titulo }}</td>
+                        <td>{{ nc.setor_envolvido }}</td>
+                        <td>{{ nc.data_deteccao|date:"d/m/Y" }}</td>
+                        <td>
+                            {% if nc.gravidade == 'critica' %}
+                                <span class="badge bg-danger">Crítica</span>
+                            {% elif nc.gravidade == 'alta' %}
+                                <span class="badge bg-warning">Alta</span>
+                            {% elif nc.gravidade == 'media' %}
+                                <span class="badge bg-info">Média</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Baixa</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if nc.status == 'fechada' %}
+                                <span class="badge bg-success">Fechada</span>
+                            {% elif nc.status == 'verificada' %}
+                                <span class="badge bg-info">Verificada</span>
+                            {% elif nc.status == 'acao_implementada' %}
+                                <span class="badge bg-primary">Ação Implementada</span>
+                            {% elif nc.status == 'analise' %}
+                                <span class="badge bg-warning">Em Análise</span>
+                            {% else %}
+                                <span class="badge bg-danger">Aberta</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if nc.data_limite < today %}
+                                <span class="badge bg-danger">{{ nc.data_limite|date:"d/m/Y" }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ nc.data_limite|date:"d/m/Y" }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'nao_conformidades:nao-conformidade-detail' nc.pk %}" 
+                                   class="btn btn-outline-primary" title="Ver detalhes">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'nao_conformidades:nao-conformidade-update' nc.pk %}" 
+                                   class="btn btn-outline-secondary" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginação -->
+        {% if is_paginated %}
+        <nav aria-label="Paginação">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Anterior</a>
+                </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Próxima</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-exclamation-triangle display-1 text-muted"></i>
+            <h4 class="text-muted mt-3">Nenhuma não conformidade encontrada</h4>
+            <p class="text-muted">Registre a primeira não conformidade do sistema.</p>
+            <a href="{% url 'nao_conformidades:nao-conformidade-create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>Registrar Primeira NC
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Adicionar data atual para comparação de prazos
+    const today = new Date().toISOString().split('T')[0];
+});
+</script>
+{% endblock %}

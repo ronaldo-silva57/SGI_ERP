@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{% if form.instance.pk %}Editar{% else %}Novo{% endif %} Aspecto{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2 text-success"><i class="bi bi-tree me-2"></i>{% if form.instance.pk %}Editar{% else %}Novo{% endif %} Aspecto</h1>
+    <a href="{% url 'meio_ambiente:aspecto-list' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>Voltar
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="d-flex justify-content-end mt-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle me-1"></i>Salvar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

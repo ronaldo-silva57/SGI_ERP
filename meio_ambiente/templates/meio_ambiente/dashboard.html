@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Meio Ambiente{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="bi bi-globe2 me-2"></i>Meio Ambiente</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <span class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-calendar me-1"></i>
+                {% now "d/m/Y" %}
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- Cards de Métricas -->
+<div class="row">
+    <!-- Aspectos Ambientais -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card dashboard-card border-left-success h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Aspectos Ambientais
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ aspectos_count }}</div>
+                        <div class="text-xs text-muted">Total registrados</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-tree fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-decoration-none" href="{% url 'meio_ambiente:aspecto-list' %}">
+                    Ver Detalhes
+                </a>
+                <i class="bi bi-chevron-right"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aspectos Críticos -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card dashboard-card border-left-danger h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                            Críticos
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ aspectos_criticos }}</div>
+                        <div class="text-xs text-muted">Aspectos críticos</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-exclamation-triangle fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-decoration-none" href="{% url 'meio_ambiente:aspecto-list' %}?criticos=true">
+                    Ver Detalhes
+                </a>
+                <i class="bi bi-chevron-right"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Licenças -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card dashboard-card border-left-info h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Licenças
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ licencas_count }}</div>
+                        <div class="text-xs text-muted">Licenças ativas</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-file-earmark-text fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-decoration-none" href="{% url 'meio_ambiente:licenca-list' %}">
+                    Ver Detalhes
+                </a>
+                <i class="bi bi-chevron-right"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emergências -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card dashboard-card border-left-warning h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Emergências
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ emergencias_count }}</div>
+                        <div class="text-xs text-muted">Registradas</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-fire fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-decoration-none" href="{% url 'meio_ambiente:emergencia-list' %}">
+                    Ver Detalhes
+                </a>
+                <i class="bi bi-chevron-right"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ações Rápidas -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-lightning me-2"></i>Ações Rápidas - Meio Ambiente
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'meio_ambiente:aspecto-create' %}" class="btn btn-outline-success w-100">
+                            <i class="bi bi-plus-circle me-1"></i>Novo Aspecto
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'meio_ambiente:licenca-create' %}" class="btn btn-outline-info w-100">
+                            <i class="bi bi-plus-circle me-1"></i>Nova Licença
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'meio_ambiente:emergencia-create' %}" class="btn btn-outline-warning w-100">
+                            <i class="bi bi-plus-circle me-1"></i>Nova Emergência
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="#" class="btn btn-outline-secondary w-100">
+                            <i class="bi bi-graph-up me-1"></i>Relatórios
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Últimas Atividades e Informações -->
+<div class="row mt-4">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-clock-history me-2"></i>Últimas Atividades
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center text-muted py-4">
+                    <i class="bi bi-inbox display-4"></i>
+                    <p class="mt-2">Nenhuma atividade recente</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-info-circle me-2"></i>Gestão Ambiental
+                </h5>
+            </div>
+            <div class="card-body">
+                <h6>Bem-vindo ao Módulo Ambiental</h6>
+                <p class="small text-muted">
+                    Sistema desenvolvido para atender aos requisitos ambientais do SGI, 
+                    gerenciando aspectos, licenças e emergências ambientais.
+                </p>
+                <div class="mt-3">
+                    <span class="badge bg-success me-1">ISO 14001:2015</span>
+                    <span class="badge bg-primary me-1">Aspectos Ambientais</span>
+                    <span class="badge bg-info me-1">Licenças</span>
+                    <span class="badge bg-warning">Emergências</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

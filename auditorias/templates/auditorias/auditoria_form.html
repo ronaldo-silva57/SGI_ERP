@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% if form.instance.pk %}Editar{% else %}Nova{% endif %} Auditoria - Zenith QMS{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-clipboard-check me-2"></i>
+        {% if form.instance.pk %}
+            Editar Auditoria: {{ form.instance.numero }}
+        {% else %}
+            Nova Auditoria
+        {% endif %}
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{% url 'auditorias:auditoria-list' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Voltar para Lista
+        </a>
+    </div>
+</div>
+
+<!-- DEBUG: Mostrar campos disponíveis -->
+{% comment %}
+<div class="alert alert-info">
+    <strong>Campos disponíveis no form:</strong><br>
+    {% for field in form %}
+        {{ field.name }}{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+</div>
+{% endcomment %}
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Renderização segura - verificar cada campo -->
+                    <div class="row">
+                        {% if form.programa %}
+                        <div class="col-md-6">
+                            {{ form.programa|as_crispy_field }}
+                        </div>
+                        {% endif %}
+                        
+                        {% if form.setor_auditado %}
+                        <div class="col-md-6">
+                            {{ form.setor_auditado|as_crispy_field }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row">
+                        {% if form.data_planejada %}
+                        <div class="col-md-4">
+                            {{ form.data_planejada|as_crispy_field }}
+                        </div>
+                        {% endif %}
+                        
+                        {% if form.data_realizacao %}
+                        <div class="col-md-4">
+                            {{ form.data_realizacao|as_crispy_field }}
+                        </div>
+                        {% endif %}
+                        
+                        {% if form.status %}
+                        <div class="col-md-4">
+                            {{ form.status|as_crispy_field }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row">
+                        {% if form.lider %}
+                        <div class="col-md-6">
+                            {{ form.lider|as_crispy_field }}
+                        </div>
+                        {% endif %}
+                        
+                        {% if form.auditores %}
+                        <div class="col-md-6">
+                            {{ form.auditores|as_crispy_field }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if form.relatorio %}
+                    {{ form.relatorio|as_crispy_field }}
+                    {% endif %}
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="{% url 'auditorias:auditoria-list' %}" class="btn btn-outline-secondary me-md-2">
+                            <i class="bi bi-x-circle me-1"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>
+                            {% if form.instance.pk %}Atualizar{% else %}Criar{% endif %} Auditoria
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if form.instance.pk %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-info-circle me-2"></i>Informações da Auditoria
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>Número:</strong> {{ form.instance.numero }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Data de Criação:</strong> {% now "d/m/Y" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

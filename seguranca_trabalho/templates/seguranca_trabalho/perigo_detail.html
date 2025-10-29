@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}{{ perigo.atividade }} - Detalhes{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2 text-danger"><i class="bi bi-exclamation-triangle me-2"></i>{{ perigo.atividade }}</h1>
+    <a href="{% url 'seguranca:perigo-list' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Voltar</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <p><strong>Perigo:</strong> {{ perigo.perigo }}</p>
+        <p><strong>Risco:</strong> {{ perigo.risco }}</p>
+        <p><strong>Nível:</strong> {{ perigo.get_nivel_risco_display }}</p>
+        <p><strong>Status:</strong> {{ perigo.get_status_display }}</p>
+        <p><strong>Responsável:</strong> {{ perigo.responsavel.get_full_name }}</p>
+        <p><strong>Data:</strong> {{ perigo.data_identificacao|date:"d/m/Y" }}</p>
+        <hr>
+        <p><strong>Medidas de Controle:</strong><br>{{ perigo.medidas_controle|linebreaks }}</p>
+    </div>
+</div>
+{% endblock %}

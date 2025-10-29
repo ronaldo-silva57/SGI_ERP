@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ nc.numero }} - {{ nc.titulo }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-exclamation-triangle me-2"></i>{{ nc.numero }}
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{% url 'nao_conformidades:nao-conformidade-update' nc.pk %}" class="btn btn-outline-secondary">
+                <i class="bi bi-pencil me-1"></i>Editar
+            </a>
+            <a href="{% url 'nao_conformidades:nao-conformidade-list' %}" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left me-1"></i>Voltar
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Informações Básicas -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Informações da Não Conformidade</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Título:</strong></div>
+                    <div class="col-sm-9">{{ nc.titulo }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Setor Envolvido:</strong></div>
+                    <div class="col-sm-9">{{ nc.setor_envolvido }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Data Detecção:</strong></div>
+                    <div class="col-sm-9">{{ nc.data_deteccao|date:"d/m/Y" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Data Limite:</strong></div>
+                    <div class="col-sm-9">
+                        {% if nc.data_limite < today %}
+                            <span class="badge bg-danger">{{ nc.data_limite|date:"d/m/Y" }} (Atrasada)</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ nc.data_limite|date:"d/m/Y" }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Gravidade:</strong></div>
+                    <div class="col-sm-9">
+                        {% if nc.gravidade == 'critica' %}
+                            <span class="badge bg-danger">Crítica</span>
+                        {% elif nc.gravidade == 'alta' %}
+                            <span class="badge bg-warning">Alta</span>
+                        {% elif nc.gravidade == 'media' %}
+                            <span class="badge bg-info">Média</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Baixa</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Status:</strong></div>
+                    <div class="col-sm-9">
+                        {% if nc.status == 'fechada' %}
+                            <span class="badge bg-success">Fechada</span>
+                        {% elif nc.status == 'verificada' %}
+                            <span class="badge bg-info">Verificada</span>
+                        {% elif nc.status == 'acao_implementada' %}
+                            <span class="badge bg-primary">Ação Implementada</span>
+                        {% elif nc.status == 'analise' %}
+                            <span class="badge bg-warning">Em Análise</span>
+                        {% else %}
+                            <span class="badge bg-danger">Aberta</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Detectado por:</strong></div>
+                    <div class="col-sm-9">{{ nc.detectado_por.get_full_name }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Responsável Análise:</strong></div>
+                    <div class="col-sm-9">{{ nc.responsavel_analise.get_full_name }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Descrição -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Descrição da Não Conformidade</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ nc.descricao|linebreaks }}</p>
+            </div>
+        </div>
+
+        <!-- Análise e Ações -->
+        {% if nc.causa_raiz or nc.acao_corretiva %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Análise e Ações Corretivas</h5>
+            </div>
+            <div class="card-body">
+                {% if nc.causa_raiz %}
+                <h6>Causa Raiz</h6>
+                <p class="card-text">{{ nc.causa_raiz|linebreaks }}</p>
+                {% endif %}
+
+                {% if nc.acao_corretiva %}
+                <h6>Ação Corretiva</h6>
+                <p class="card-text">{{ nc.acao_corretiva|linebreaks }}</p>
+                {% endif %}
+
+                {% if nc.data_implementacao %}
+                <div class="row mt-3">
+                    <div class="col-sm-4">
+                        <strong>Data Implementação:</strong> {{ nc.data_implementacao|date:"d/m/Y" }}
+                    </div>
+                    <div class="col-sm-4">
+                        <strong>Eficácia:</strong> 
+                        {% if nc.eficaz == True %}
+                            <span class="badge bg-success">Eficaz</span>
+                        {% elif nc.eficaz == False %}
+                            <span class="badge bg-danger">Não Eficaz</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Não Verificada</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Ações</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    {% if nc.evidencias %}
+                    <a href="{{ nc.evidencias.url }}" class="btn btn-success" download>
+                        <i class="bi bi-download me-1"></i>Download Evidências
+                    </a>
+                    {% else %}
+                    <button class="btn btn-outline-secondary" disabled>
+                        <i class="bi bi-file-earmark me-1"></i>Nenhuma evidência
+                    </button>
+                    {% endif %}
+                    
+                    <a href="{% url 'nao_conformidades:nao-conformidade-update' nc.pk %}" class="btn btn-outline-primary">
+                        <i class="bi bi-pencil me-1"></i>Editar NC
+                    </a>
+                    
+                    <a href="{% url 'nao_conformidades:nao-conformidade-list' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-list me-1"></i>Ver Todas NCs
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Fluxo da NC</h5>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    <div class="timeline-item {% if nc.status == 'aberta' %}active{% endif %}">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>Registro</h6>
+                            <small>{{ nc.data_deteccao|date:"d/m/Y" }}</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item {% if nc.status == 'analise' %}active{% endif %}">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>Análise</h6>
+                            <small>Em andamento</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item {% if nc.status == 'acao_implementada' %}active{% endif %}">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>Ação Implementada</h6>
+                            <small>{% if nc.data_implementacao %}{{ nc.data_implementacao|date:"d/m/Y" }}{% endif %}</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item {% if nc.status == 'verificada' %}active{% endif %}">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>Verificação</h6>
+                            <small>Eficácia</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item {% if nc.status == 'fechada' %}active{% endif %}">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>Fechamento</h6>
+                            <small>Concluído</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 20px;
+}
+.timeline-item {
+    position: relative;
+    margin-bottom: 15px;
+}
+.timeline-marker {
+    position: absolute;
+    left: -20px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #6c757d;
+    border: 2px solid white;
+}
+.timeline-item.active .timeline-marker {
+    background-color: #0d6efd;
+}
+.timeline-content h6 {
+    margin-bottom: 2px;
+    font-size: 0.9rem;
+}
+.timeline-content small {
+    color: #6c757d;
+    font-size: 0.8rem;
+}
+</style>
+{% endblock %}

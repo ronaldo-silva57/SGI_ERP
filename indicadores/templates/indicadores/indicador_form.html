@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% if form.instance.pk %}Editar{% else %}Novo{% endif %} Indicador - Zenith QMS{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-bar-chart me-2"></i>
+        {% if form.instance.pk %}
+            Editar Indicador: {{ form.instance.nome }}
+        {% else %}
+            Novo Indicador
+        {% endif %}
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{% url 'indicadores:indicador-list' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Voltar para Lista
+        </a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    {{ form.nome|as_crispy_field }}
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            {{ form.tipo|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.meta|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.unidade_medida|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form.frequencia_medicao|as_crispy_field }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.responsavel|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    {{ form.formula_calculo|as_crispy_field }}
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="{% url 'indicadores:indicador-list' %}" class="btn btn-outline-secondary me-md-2">
+                            <i class="bi bi-x-circle me-1"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>
+                            {% if form.instance.pk %}Atualizar{% else %}Criar{% endif %} Indicador
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if form.instance.pk %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-info-circle me-2"></i>Histórico de Medições
+                </h5>
+            </div>
+            <div class="card-body">
+                {% with medicoes=form.instance.medicaoindicador_set.all %}
+                    {% if medicoes %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Valor Medido</th>
+                                    <th>Observações</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for medicao in medicoes %}
+                                <tr>
+                                    <td>{{ medicao.data_medicao|date:"d/m/Y" }}</td>
+                                    <td>
+                                        <strong>{{ medicao.valor_medido }} {{ form.instance.unidade_medida }}</strong>
+                                        {% if medicao.valor_medido >= form.instance.meta %}
+                                            <i class="bi bi-arrow-up text-success"></i>
+                                        {% else %}
+                                            <i class="bi bi-arrow-down text-warning"></i>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ medicao.observacoes|truncatewords:5 }}</td>
+                                    <td>
+                                        <a href="#" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center">Nenhuma medição registrada para este indicador.</p>
+                    {% endif %}
+                {% endwith %}
+                
+                <div class="text-center mt-3">
+                    <a href="#" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-plus-circle me-1"></i>Adicionar Medição
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

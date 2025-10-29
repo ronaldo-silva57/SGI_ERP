@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ indicador.nome }} - Indicador{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-bar-chart me-2"></i>{{ indicador.nome }}
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{% url 'indicadores:indicador-update' indicador.pk %}" class="btn btn-outline-secondary">
+                <i class="bi bi-pencil me-1"></i>Editar
+            </a>
+            <a href="#" class="btn btn-outline-info">
+                <i class="bi bi-plus-circle me-1"></i>Nova Medição
+            </a>
+            <a href="{% url 'indicadores:indicador-list' %}" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left me-1"></i>Voltar
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Informações Básicas -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Informações do Indicador</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Nome:</strong></div>
+                    <div class="col-sm-9">{{ indicador.nome }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Tipo:</strong></div>
+                    <div class="col-sm-9">
+                        <span class="badge bg-secondary">{{ indicador.get_tipo_display }}</span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Meta:</strong></div>
+                    <div class="col-sm-9">
+                        <strong class="h5">{{ indicador.meta }} {{ indicador.unidade_medida }}</strong>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Frequência:</strong></div>
+                    <div class="col-sm-9">{{ indicador.frequencia_medicao }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Responsável:</strong></div>
+                    <div class="col-sm-9">{{ indicador.responsavel }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Fórmula:</strong></div>
+                    <div class="col-sm-9">{{ indicador.formula_calculo|linebreaks }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Última Medição -->
+        {% with ultima_medicao=indicador.medicaoindicador_set.last %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Última Medição</h5>
+            </div>
+            <div class="card-body">
+                {% if ultima_medicao %}
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h3 class="card-title 
+                                    {% if ultima_medicao.valor_medido >= indicador.meta %}text-success{% else %}text-warning{% endif %}">
+                                    {{ ultima_medicao.valor_medido }} {{ indicador.unidade_medida }}
+                                </h3>
+                                <p class="card-text">Valor Medido</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h3 class="card-title text-primary">
+                                    {{ indicador.meta }} {{ indicador.unidade_medida }}
+                                </h3>
+                                <p class="card-text">Meta</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h3 class="card-title 
+                                    {% if ultima_medicao.valor_medido >= indicador.meta %}text-success{% else %}text-warning{% endif %}">
+                                    {% widthratio ultima_medicao.valor_medido indicador.meta 100 %}%
+                                </h3>
+                                <p class="card-text">Atingimento</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <strong>Data da Medição:</strong> {{ ultima_medicao.data_medicao|date:"d/m/Y" }}<br>
+                        {% if ultima_medicao.observacoes %}
+                        <strong>Observações:</strong> {{ ultima_medicao.observacoes }}
+                        {% endif %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="bi bi-bar-chart display-1 text-muted"></i>
+                    <h4 class="text-muted mt-3">Nenhuma medição registrada</h4>
+                    <p class="text-muted">Adicione a primeira medição para este indicador.</p>
+                    <a href="#" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-1"></i>Adicionar Primeira Medição
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endwith %}
+
+        <!-- Histórico de Medições -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Histórico de Medições</h5>
+            </div>
+            <div class="card-body">
+                {% with medicoes=indicador.medicaoindicador_set.all %}
+                    {% if medicoes %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Valor Medido</th>
+                                    <th>Meta</th>
+                                    <th>Atingimento</th>
+                                    <th>Status</th>
+                                    <th>Observações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for medicao in medicoes %}
+                                <tr>
+                                    <td>{{ medicao.data_medicao|date:"d/m/Y" }}</td>
+                                    <td>
+                                        <strong>{{ medicao.valor_medido }} {{ indicador.unidade_medida }}</strong>
+                                    </td>
+                                    <td>{{ indicador.meta }} {{ indicador.unidade_medida }}</td>
+                                    <td>
+                                        {% widthratio medicao.valor_medido indicador.meta 100 %}%
+                                    </td>
+                                    <td>
+                                        {% if medicao.valor_medido >= indicador.meta %}
+                                            <span class="badge bg-success">Acima da Meta</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">Abaixo da Meta</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ medicao.observacoes|truncatewords:8 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center">Nenhuma medição registrada.</p>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Ações</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="#" class="btn btn-outline-info">
+                        <i class="bi bi-plus-circle me-1"></i>Nova Medição
+                    </a>
+                    
+                    <a href="{% url 'indicadores:indicador-update' indicador.pk %}" class="btn btn-outline-primary">
+                        <i class="bi bi-pencil me-1"></i>Editar Indicador
+                    </a>
+                    
+                    <a href="{% url 'indicadores:indicador-list' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-list me-1"></i>Ver Todos Indicadores
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Resumo do Indicador</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>Total de Medições:</strong> 
+                    <span class="badge bg-primary">{{ indicador.medicaoindicador_set.count }}</span>
+                </div>
+                <div class="mb-3">
+                    <strong>Média dos Valores:</strong>
+                    <br>
+                    <span class="h5">
+                        {% with medicoes=indicador.medicaoindicador_set.all %}
+                            {% if medicoes %}
+                                {% load custom_filters %}
+                                {{ medicoes|avg_value }} {{ indicador.unidade_medida }}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        {% endwith %}
+                    </span>
+                </div>
+                <div class="mb-3">
+                    <strong>Melhor Resultado:</strong>
+                    <br>
+                    <span class="h5 text-success">
+                        {% with medicoes=indicador.medicaoindicador_set.all %}
+                            {% if medicoes %}
+                                {{ medicoes|max_value }} {{ indicador.unidade_medida }}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        {% endwith %}
+                    </span>
+                </div>
+                <div>
+                    <strong>Status Atual:</strong>
+                    <br>
+                    {% with ultima_medicao=indicador.medicaoindicador_set.last %}
+                        {% if ultima_medicao %}
+                            {% if ultima_medicao.valor_medido >= indicador.meta %}
+                                <span class="badge bg-success">Dentro da Meta</span>
+                            {% else %}
+                                <span class="badge bg-warning">Fora da Meta</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="badge bg-secondary">Sem Dados</span>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Informações Técnicas</h5>
+            </div>
+            <div class="card-body">
+                <small class="text-muted">
+                    <div><strong>Unidade de Medida:</strong> {{ indicador.unidade_medida }}</div>
+                    <div><strong>Frequência:</strong> {{ indicador.frequencia_medicao }}</div>
+                    <div><strong>Tipo:</strong> {{ indicador.get_tipo_display }}</div>
+                    <div><strong>Responsável:</strong> {{ indicador.responsavel }}</div>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

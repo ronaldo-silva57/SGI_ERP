@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}Análise Crítica - Zenith QMS{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-graph-up me-2"></i>Análise Crítica
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{% url 'analise_critica:analise-critica-create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>Nova Análise
+        </a>
+    </div>
+</div>
+
+<!-- Estatísticas Rápidas -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-primary text-white mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">Realizadas</div>
+                        <div class="h5 mb-0">{{ analises_realizadas }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-check-circle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-warning text-white mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">Planejadas</div>
+                        <div class="h5 mb-0">{{ analises_planejadas }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-clock fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Lista de Análises -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Análises Críticas do Sistema</h5>
+    </div>
+    <div class="card-body">
+        {% if analises %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Período</th>
+                        <th>Norma</th>
+                        <th>Data da Reunião</th>
+                        <th>Coordenador</th>
+                        <th>Status</th>
+                        <th>Próxima Reunião</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for analise in analises %}
+                    <tr>
+                        <td>
+                            <strong>{{ analise.periodo }}</strong>
+                        </td>
+                        <td>
+                            <span class="badge bg-info">{{ analise.get_norma_display }}</span>
+                        </td>
+                        <td>{{ analise.data_reuniao|date:"d/m/Y" }}</td>
+                        <td>{{ analise.coordenador.get_full_name }}</td>
+                        <td>
+                            {% if analise.status == 'realizada' %}
+                                <span class="badge bg-success">Realizada</span>
+                            {% elif analise.status == 'planejada' %}
+                                <span class="badge bg-warning">Planejada</span>
+                            {% else %}
+                                <span class="badge bg-danger">Cancelada</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ analise.data_proxima_reuniao|date:"d/m/Y" }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'analise_critica:analise-critica-detail' analise.pk %}" 
+                                   class="btn btn-outline-primary" title="Ver detalhes">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'analise_critica:analise-critica-update' analise.pk %}" 
+                                   class="btn btn-outline-secondary" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginação -->
+        {% if is_paginated %}
+        <nav aria-label="Paginação">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-graph-up display-1 text-muted"></i>
+            <h4 class="text-muted mt-3">Nenhuma análise crítica encontrada</h4>
+            <p class="text-muted">Comece criando a primeira análise crítica do sistema.</p>
+            <a href="{% url 'analise_critica:analise-critica-create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>Criar Primeira Análise
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Adicionar contexto para as estatísticas (será preenchido via view)
+document.addEventListener('DOMContentLoaded', function() {
+    // Estatísticas podem ser atualizadas via AJAX no futuro
+});
+</script>
+{% endblock %}

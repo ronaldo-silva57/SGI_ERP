@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ analise.periodo }} - Análise Crítica{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-graph-up me-2"></i>{{ analise.periodo }}
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{% url 'analise_critica:analise-critica-update' analise.pk %}" class="btn btn-outline-secondary">
+                <i class="bi bi-pencil me-1"></i>Editar
+            </a>
+            <a href="{% url 'analise_critica:analise-critica-list' %}" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left me-1"></i>Voltar
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Informações Básicas -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Informações da Análise</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Norma:</strong></div>
+                    <div class="col-sm-8">
+                        <span class="badge bg-info">{{ analise.get_norma_display }}</span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Período:</strong></div>
+                    <div class="col-sm-8">{{ analise.periodo }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Data da Reunião:</strong></div>
+                    <div class="col-sm-8">{{ analise.data_reuniao|date:"d/m/Y" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Próxima Reunião:</strong></div>
+                    <div class="col-sm-8">{{ analise.data_proxima_reuniao|date:"d/m/Y" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Coordenador:</strong></div>
+                    <div class="col-sm-8">{{ analise.coordenador.get_full_name }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Status:</strong></div>
+                    <div class="col-sm-8">
+                        {% if analise.status == 'realizada' %}
+                            <span class="badge bg-success">Realizada</span>
+                        {% elif analise.status == 'planejada' %}
+                            <span class="badge bg-warning">Planejada</span>
+                        {% else %}
+                            <span class="badge bg-danger">Cancelada</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Participantes:</strong></div>
+                    <div class="col-sm-8">
+                        {% for participante in analise.participantes.all %}
+                        <span class="badge bg-secondary me-1">{{ participante.get_full_name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pontos Abordados -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Pontos Abordados</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Indicadores Analisados</h6>
+                        {% if kpis_list %}
+                        <ul class="list-group list-group-flush">
+                            {% for kpi in kpis_list %}
+                            <li class="list-group-item">{{ kpi }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">Nenhum indicador analisado</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Não Conformidades Analisadas</h6>
+                        {% if ncs_list %}
+                        <ul class="list-group list-group-flush">
+                            {% for nc in ncs_list %}
+                            <li class="list-group-item">{{ nc }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">Nenhuma não conformidade analisada</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h6>Auditorias Analisadas</h6>
+                        {% if auditorias_list %}
+                        <ul class="list-group list-group-flush">
+                            {% for aud in auditorias_list %}
+                            <li class="list-group-item">{{ aud }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">Nenhuma auditoria analisada</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Recursos Necessários</h6>
+                        {% if recursos_list %}
+                        <ul class="list-group list-group-flush">
+                            {% for recurso in recursos_list %}
+                            <li class="list-group-item">{{ recurso }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">Nenhum recurso necessário identificado</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Temas do Sistema de Gestão Integrada</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Aspectos e Impactos Ambientais</h6>
+                        {% if temas_ambientais_list %}
+                        <ul class="list-group list-group-flush">
+                            {% for tema in temas_ambientais_list %}
+                            <li class="list-group-item">{{ tema }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">Nenhum tema ambiental discutido</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Riscos e Oportunidades de SST</h6>
+                        {% if temas_sst_list %}
+                        <ul class="list-group list-group-flush">
+                            {% for tema in temas_sst_list %}
+                            <li class="list-group-item">{{ tema }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">Nenhum tema de SST discutido</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Resultados -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Resultados da Análise</h5>
+            </div>
+            <div class="card-body">
+                <h6>Decisões Tomadas</h6>
+                <p class="card-text">{{ analise.decisoes_tomadas|linebreaks }}</p>
+
+                <h6 class="mt-4">Ações de Melhoria</h6>
+                <p class="card-text">{{ analise.acoes_melhoria|linebreaks }}</p>
+
+                {% if analise.observacoes %}
+                <h6 class="mt-4">Observações</h6>
+                <p class="card-text">{{ analise.observacoes|linebreaks }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Ações</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    {% if analise.ata_reuniao %}
+                    <a href="{{ analise.ata_reuniao.url }}" class="btn btn-success" download>
+                        <i class="bi bi-download me-1"></i>Download Ata
+                    </a>
+                    {% else %}
+                    <button class="btn btn-outline-secondary" disabled>
+                        <i class="bi bi-file-earmark me-1"></i>Nenhuma ata
+                    </button>
+                    {% endif %}
+                    
+                    <a href="{% url 'analise_critica:analise-critica-update' analise.pk %}" class="btn btn-outline-primary">
+                        <i class="bi bi-pencil me-1"></i>Editar Análise
+                    </a>
+                    
+                    <a href="{% url 'analise_critica:analise-critica-list' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-list me-1"></i>Ver Todas Análises
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Metadados</h5>
+            </div>
+            <div class="card-body">
+                <small class="text-muted">
+                    <div><strong>Criado em:</strong> {{ analise.data_criacao|date:"d/m/Y H:i" }}</div>
+                    <div><strong>Atualizado em:</strong> {{ analise.data_atualizacao|date:"d/m/Y H:i" }}</div>
+                    {% if analise.ata_reuniao %}
+                    <div><strong>Ata:</strong> {{ analise.ata_reuniao.name|slice:"25:" }}</div>
+                    <div><strong>Tamanho:</strong> {{ analise.ata_reuniao.size|filesizeformat }}</div>
+                    {% endif %}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

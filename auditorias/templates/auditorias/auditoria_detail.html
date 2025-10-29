@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ auditoria.numero }} - {{ auditoria.setor_auditado }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-clipboard-check me-2"></i>{{ auditoria.numero }}
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{% url 'auditorias:auditoria-update' auditoria.pk %}" class="btn btn-outline-secondary">
+                <i class="bi bi-pencil me-1"></i>Editar
+            </a>
+            <a href="{% url 'auditorias:auditoria-list' %}" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left me-1"></i>Voltar
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Informações Básicas -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Informações da Auditoria</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Número:</strong></div>
+                    <div class="col-sm-9">{{ auditoria.numero }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Programa:</strong></div>
+                    <div class="col-sm-9">{{ auditoria.programa.ano }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Setor Auditado:</strong></div>
+                    <div class="col-sm-9">{{ auditoria.setor_auditado }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Data Planejada:</strong></div>
+                    <div class="col-sm-9">{{ auditoria.data_planejada|date:"d/m/Y" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Data Realização:</strong></div>
+                    <div class="col-sm-9">
+                        {% if auditoria.data_realizacao %}
+                            {{ auditoria.data_realizacao|date:"d/m/Y" }}
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Status:</strong></div>
+                    <div class="col-sm-9">
+                        {% if auditoria.status == 'concluida' %}
+                            <span class="badge bg-success">Concluída</span>
+                        {% elif auditoria.status == 'executacao' %}
+                            <span class="badge bg-warning">Em Execução</span>
+                        {% elif auditoria.status == 'cancelada' %}
+                            <span class="badge bg-danger">Cancelada</span>
+                        {% else %}
+                            <span class="badge bg-info">Planejada</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Líder:</strong></div>
+                    <div class="col-sm-9">{{ auditoria.lider.get_full_name }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Equipe de Auditoria -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Equipe de Auditoria</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for auditor in auditoria.auditores.all %}
+                    <div class="col-md-6 mb-2">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-person-circle me-2 text-primary"></i>
+                            <div>
+                                <strong>{{ auditor.get_full_name }}</strong>
+                                <br>
+                                <small class="text-muted">{{ auditor.get_tipo_usuario_display }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Informações do Programa -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Informações do Programa de Auditoria</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Ano:</strong></div>
+                    <div class="col-sm-8">{{ auditoria.programa.ano }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Objetivo:</strong></div>
+                    <div class="col-sm-8">{{ auditoria.programa.objetivo|linebreaks }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Escopo:</strong></div>
+                    <div class="col-sm-8">{{ auditoria.programa.escopo|linebreaks }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Critérios:</strong></div>
+                    <div class="col-sm-8">{{ auditoria.programa.criterios|linebreaks }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Ações</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    {% if auditoria.relatorio %}
+                    <a href="{{ auditoria.relatorio.url }}" class="btn btn-success" download>
+                        <i class="bi bi-download me-1"></i>Download Relatório
+                    </a>
+                    {% else %}
+                    <button class="btn btn-outline-secondary" disabled>
+                        <i class="bi bi-file-earmark me-1"></i>Nenhum relatório
+                    </button>
+                    {% endif %}
+                    
+                    <a href="{% url 'auditorias:auditoria-update' auditoria.pk %}" class="btn btn-outline-primary">
+                        <i class="bi bi-pencil me-1"></i>Editar Auditoria
+                    </a>
+                    
+                    <a href="{% url 'auditorias:auditoria-list' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-list me-1"></i>Ver Todas Auditorias
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Status da Auditoria</h5>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    <div class="timeline-item {% if auditoria.status == 'planejada' %}active{% endif %}">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>Planejada</h6>
+                            <small>{{ auditoria.data_planejada|date:"d/m/Y" }}</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item {% if auditoria.status == 'executacao' %}active{% endif %}">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>Em Execução</h6>
+                            <small>{% if auditoria.data_realizacao %}{{ auditoria.data_realizacao|date:"d/m/Y" }}{% endif %}</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item {% if auditoria.status == 'concluida' %}active{% endif %}">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>Concluída</h6>
+                            <small>Relatório emitido</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Metadados</h5>
+            </div>
+            <div class="card-body">
+                <small class="text-muted">
+                    {% if auditoria.relatorio %}
+                    <div><strong>Relatório:</strong> {{ auditoria.relatorio.name|slice:"20:" }}</div>
+                    <div><strong>Tamanho:</strong> {{ auditoria.relatorio.size|filesizeformat }}</div>
+                    {% endif %}
+                    <div><strong>Total de Auditores:</strong> {{ auditoria.auditores.count }}</div>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 20px;
+}
+.timeline-item {
+    position: relative;
+    margin-bottom: 15px;
+}
+.timeline-marker {
+    position: absolute;
+    left: -20px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #6c757d;
+    border: 2px solid white;
+}
+.timeline-item.active .timeline-marker {
+    background-color: #0d6efd;
+}
+.timeline-content h6 {
+    margin-bottom: 2px;
+    font-size: 0.9rem;
+}
+.timeline-content small {
+    color: #6c757d;
+    font-size: 0.8rem;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% if form.instance.pk %}Editar{% else %}Novo{% endif %} Documento - Zenith QMS{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-folder me-2"></i>
+        {% if form.instance.pk %}
+            Editar Documento: {{ form.instance.codigo }}
+        {% else %}
+            Novo Documento
+        {% endif %}
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{% url 'gestao_documental:documento-list' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Voltar para Lista
+        </a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form.codigo|as_crispy_field }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.categoria|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    {{ form.titulo|as_crispy_field }}
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            {{ form.revisao|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.status|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.data_aprovacao|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form.elaborador|as_crispy_field }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.aprovador|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    {{ form.arquivo|as_crispy_field }}
+
+                    {{ form.controle_alteracoes|as_crispy_field }}
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="{% url 'gestao_documental:documento-list' %}" class="btn btn-outline-secondary me-md-2">
+                            <i class="bi bi-x-circle me-1"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>
+                            {% if form.instance.pk %}Atualizar{% else %}Criar{% endif %} Documento
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if form.instance.pk %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-info-circle me-2"></i>Informações do Documento
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>Data de Criação:</strong> {{ form.instance.data_elaboracao|date:"d/m/Y H:i" }}
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Última Atualização:</strong> {% now "d/m/Y H:i" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

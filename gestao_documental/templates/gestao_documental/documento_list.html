@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestão Documental - Zenith QMS{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-folder me-2"></i>Gestão Documental
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{% url 'gestao_documental:documento-create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>Novo Documento
+        </a>
+    </div>
+</div>
+
+<!-- Filtros -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label for="status" class="form-label">Status</label>
+                <select name="status" id="status" class="form-select">
+                    <option value="">Todos os Status</option>
+                    <option value="rascunho" {% if request.GET.status == 'rascunho' %}selected{% endif %}>Rascunho</option>
+                    <option value="revisao" {% if request.GET.status == 'revisao' %}selected{% endif %}>Em Revisão</option>
+                    <option value="aprovado" {% if request.GET.status == 'aprovado' %}selected{% endif %}>Aprovado</option>
+                    <option value="obsoleto" {% if request.GET.status == 'obsoleto' %}selected{% endif %}>Obsoleto</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="categoria" class="form-label">Categoria</label>
+                <select name="categoria" id="categoria" class="form-select">
+                    <option value="">Todas as Categorias</option>
+                    <!-- Categorias serão preenchidas via contexto -->
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-funnel me-1"></i>Filtrar
+                </button>
+                <a href="{% url 'gestao_documental:documento-list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Limpar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Lista de Documentos -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Documentos do Sistema</h5>
+    </div>
+    <div class="card-body">
+        {% if documentos %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Título</th>
+                        <th>Categoria</th>
+                        <th>Revisão</th>
+                        <th>Status</th>
+                        <th>Data Elaboração</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for documento in documentos %}
+                    <tr>
+                        <td>
+                            <strong>{{ documento.codigo }}</strong>
+                        </td>
+                        <td>{{ documento.titulo }}</td>
+                        <td>
+                            <span class="badge bg-secondary">{{ documento.categoria.nome }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-info">Rev. {{ documento.revisao }}</span>
+                        </td>
+                        <td>
+                            {% if documento.status == 'aprovado' %}
+                                <span class="badge bg-success">Aprovado</span>
+                            {% elif documento.status == 'revisao' %}
+                                <span class="badge bg-warning">Em Revisão</span>
+                            {% elif documento.status == 'rascunho' %}
+                                <span class="badge bg-secondary">Rascunho</span>
+                            {% else %}
+                                <span class="badge bg-danger">Obsoleto</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ documento.data_elaboracao|date:"d/m/Y" }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'gestao_documental:documento-detail' documento.pk %}" 
+                                   class="btn btn-outline-primary" title="Ver detalhes">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'gestao_documental:documento-update' documento.pk %}" 
+                                   class="btn btn-outline-secondary" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                {% if documento.arquivo %}
+                                <a href="{{ documento.arquivo.url }}" 
+                                   class="btn btn-outline-success" title="Download" download>
+                                    <i class="bi bi-download"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginação -->
+        {% if is_paginated %}
+        <nav aria-label="Paginação">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Anterior</a>
+                </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Próxima</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-folder-x display-1 text-muted"></i>
+            <h4 class="text-muted mt-3">Nenhum documento encontrado</h4>
+            <p class="text-muted">Comece criando o primeiro documento do sistema.</p>
+            <a href="{% url 'gestao_documental:documento-create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>Criar Primeiro Documento
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

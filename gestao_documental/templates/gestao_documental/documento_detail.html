@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ documento.codigo }} - {{ documento.titulo }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-folder me-2"></i>{{ documento.codigo }}
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{% url 'gestao_documental:documento-update' documento.pk %}" class="btn btn-outline-secondary">
+                <i class="bi bi-pencil me-1"></i>Editar
+            </a>
+            <a href="{% url 'gestao_documental:documento-list' %}" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left me-1"></i>Voltar
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Informações do Documento</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Título:</strong></div>
+                    <div class="col-sm-9">{{ documento.titulo }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Categoria:</strong></div>
+                    <div class="col-sm-9">
+                        <span class="badge bg-secondary">{{ documento.categoria.nome }}</span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Revisão:</strong></div>
+                    <div class="col-sm-9">
+                        <span class="badge bg-info">Rev. {{ documento.revisao }}</span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Status:</strong></div>
+                    <div class="col-sm-9">
+                        {% if documento.status == 'aprovado' %}
+                            <span class="badge bg-success">Aprovado</span>
+                        {% elif documento.status == 'revisao' %}
+                            <span class="badge bg-warning">Em Revisão</span>
+                        {% elif documento.status == 'rascunho' %}
+                            <span class="badge bg-secondary">Rascunho</span>
+                        {% else %}
+                            <span class="badge bg-danger">Obsoleto</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Data Elaboração:</strong></div>
+                    <div class="col-sm-9">{{ documento.data_elaboracao|date:"d/m/Y" }}</div>
+                </div>
+                {% if documento.data_aprovacao %}
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Data Aprovação:</strong></div>
+                    <div class="col-sm-9">{{ documento.data_aprovacao|date:"d/m/Y" }}</div>
+                </div>
+                {% endif %}
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Elaborador:</strong></div>
+                    <div class="col-sm-9">{{ documento.elaborador.get_full_name }}</div>
+                </div>
+                {% if documento.aprovador %}
+                <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Aprovador:</strong></div>
+                    <div class="col-sm-9">{{ documento.aprovador.get_full_name }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if documento.controle_alteracoes %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Controle de Alterações</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ documento.controle_alteracoes|linebreaks }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Ações</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    {% if documento.arquivo %}
+                    <a href="{{ documento.arquivo.url }}" class="btn btn-success" download>
+                        <i class="bi bi-download me-1"></i>Download Documento
+                    </a>
+                    {% else %}
+                    <button class="btn btn-outline-secondary" disabled>
+                        <i class="bi bi-file-earmark me-1"></i>Nenhum arquivo
+                    </button>
+                    {% endif %}
+                    
+                    <a href="{% url 'gestao_documental:documento-update' documento.pk %}" class="btn btn-outline-primary">
+                        <i class="bi bi-pencil me-1"></i>Editar Documento
+                    </a>
+                    
+                    <a href="{% url 'gestao_documental:documento-list' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-list me-1"></i>Ver Todos Documentos
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Metadados</h5>
+            </div>
+            <div class="card-body">
+                <small class="text-muted">
+                    <div><strong>Criado em:</strong> {{ documento.data_elaboracao|date:"d/m/Y H:i" }}</div>
+                    {% if documento.arquivo %}
+                    <div><strong>Arquivo:</strong> {{ documento.arquivo.name|slice:"12:" }}</div>
+                    <div><strong>Tamanho:</strong> {{ documento.arquivo.size|filesizeformat }}</div>
+                    {% endif %}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

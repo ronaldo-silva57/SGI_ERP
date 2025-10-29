@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+
+{% block title %}Indicadores - Zenith QMS{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-bar-chart me-2"></i>Indicadores
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <!-- Botões de Exportação -->
+            <a href="{% url 'indicadores:exportar-pdf' %}?norma={{ norma_filter }}&categoria={{ categoria_filter }}&tipo={{ tipo_filter }}&status={{ status_filter }}" 
+               class="btn btn-outline-danger">
+                <i class="bi bi-file-pdf me-1"></i>PDF
+            </a>
+            <a href="{% url 'indicadores:exportar-excel' %}?norma={{ norma_filter }}&categoria={{ categoria_filter }}&tipo={{ tipo_filter }}&status={{ status_filter }}" 
+               class="btn btn-outline-success">
+                <i class="bi bi-file-excel me-1"></i>Excel
+            </a>
+        </div>
+        <a href="{% url 'indicadores:indicador-create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>Novo Indicador
+        </a>
+    </div>
+</div>
+
+<!-- Filtros -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="card-title mb-0">
+            <i class="bi bi-funnel me-2"></i>Filtros
+        </h5>
+    </div>
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label for="norma" class="form-label">Norma</label>
+                <select name="norma" id="norma" class="form-select">
+                    <option value="">Todas as Normas</option>
+                    <option value="iso9001" {% if norma_filter == 'iso9001' %}selected{% endif %}>ISO 9001</option>
+                    <option value="iso14001" {% if norma_filter == 'iso14001' %}selected{% endif %}>ISO 14001</option>
+                    <option value="iso45001" {% if norma_filter == 'iso45001' %}selected{% endif %}>ISO 45001</option>
+                    <option value="integrado" {% if norma_filter == 'integrado' %}selected{% endif %}>Integrado</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="categoria" class="form-label">Categoria</label>
+                <select name="categoria" id="categoria" class="form-select">
+                    <option value="">Todas as Categorias</option>
+                    <option value="qualidade" {% if categoria_filter == 'qualidade' %}selected{% endif %}>Qualidade</option>
+                    <option value="ambiental" {% if categoria_filter == 'ambiental' %}selected{% endif %}>Ambiental</option>
+                    <option value="sst" {% if categoria_filter == 'sst' %}selected{% endif %}>Saúde e Segurança</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="tipo" class="form-label">Tipo</label>
+                <select name="tipo" id="tipo" class="form-select">
+                    <option value="">Todos os Tipos</option>
+                    <option value="eficacia" {% if tipo_filter == 'eficacia' %}selected{% endif %}>Eficácia</option>
+                    <option value="eficiencia" {% if tipo_filter == 'eficiencia' %}selected{% endif %}>Eficiência</option>
+                    <option value="qualidade" {% if tipo_filter == 'qualidade' %}selected{% endif %}>Qualidade</option>
+                    <option value="satisfacao" {% if tipo_filter == 'satisfacao' %}selected{% endif %}>Satisfação</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="status" class="form-label">Status</label>
+                <select name="status" id="status" class="form-select">
+                    <option value="">Todos os Status</option>
+                    <option value="acima_meta" {% if status_filter == 'acima_meta' %}selected{% endif %}>Acima da Meta</option>
+                    <option value="abaixo_meta" {% if status_filter == 'abaixo_meta' %}selected{% endif %}>Abaixo da Meta</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-filter me-1"></i>Aplicar Filtros
+                </button>
+                <a href="{% url 'indicadores:indicador-list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle me-1"></i>Limpar Filtros
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Cards de Resumo -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-primary text-white mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">Total Indicadores</div>
+                        <div class="h5 mb-0">{{ total_indicadores }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-bar-chart fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-success text-white mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">Acima da Meta</div>
+                        <div class="h5 mb-0">{{ acima_meta }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-arrow-up fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-warning text-white mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">Abaixo da Meta</div>
+                        <div class="h5 mb-0">{{ abaixo_meta }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-arrow-down fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Lista de Indicadores -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Indicadores do Sistema</h5>
+    </div>
+    <div class="card-body">
+        {% if indicadores %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Tipo</th>
+                        <th>Meta</th>
+                        <th>Última Medição</th>
+                        <th>Unidade</th>
+                        <th>Frequência</th>
+                        <th>Responsável</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for indicador in indicadores %}
+                    <tr>
+                        <td>
+                            <strong>{{ indicador.nome }}</strong>
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary">{{ indicador.get_tipo_display }}</span>
+                        </td>
+                        <td>{{ indicador.meta }} {{ indicador.unidade_medida }}</td>
+                        <td>
+                            {% with ultima_medicao=indicador.medicaoindicador_set.last %}
+                                {% if ultima_medicao %}
+                                    {{ ultima_medicao.valor_medido }} {{ indicador.unidade_medida }}
+                                    <br>
+                                    <small class="text-muted">{{ ultima_medicao.data_medicao|date:"d/m/Y" }}</small>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        <td>{{ indicador.unidade_medida }}</td>
+                        <td>{{ indicador.frequencia_medicao }}</td>
+                        <td>{{ indicador.responsavel }}</td>
+                        <td>
+                            {% with ultima_medicao=indicador.medicaoindicador_set.last %}
+                                {% if ultima_medicao %}
+                                    {% if ultima_medicao.valor_medido >= indicador.meta %}
+                                        <span class="badge bg-success">Acima da Meta</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Abaixo da Meta</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge bg-secondary">Sem Dados</span>
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'indicadores:indicador-detail' indicador.pk %}" class="btn btn-outline-primary" title="Ver detalhes">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'indicadores:indicador-update' indicador.pk %}" class="btn btn-outline-secondary" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-bar-chart display-1 text-muted"></i>
+            <h4 class="text-muted mt-3">Nenhum indicador encontrado</h4>
+            <p class="text-muted">Tente ajustar os filtros ou criar um novo indicador.</p>
+            <a href="{% url 'indicadores:indicador-create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>Criar Primeiro Indicador
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
