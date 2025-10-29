@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import AnaliseCritica
 
-@admin.register(AnaliseCritica)
+#@admin.register(AnaliseCritica)
 class AnaliseCriticaAdmin(admin.ModelAdmin):
     list_display = ['periodo', 'norma', 'data_reuniao', 'coordenador', 'status', 'data_proxima_reuniao']
     list_filter = ['norma', 'status', 'data_reuniao', 'coordenador']

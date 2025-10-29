@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import PerigoRisco, Acidente, TreinamentoSST
 
-@admin.register(PerigoRisco)
+#@admin.register(PerigoRisco)
 class PerigoRiscoAdmin(admin.ModelAdmin):
     list_display = ['atividade', 'perigo', 'risco', 'nivel_risco', 'responsavel', 'status', 'data_identificacao']
     list_filter = ['nivel_risco', 'status', 'data_identificacao', 'responsavel']
@@ -22,7 +22,7 @@ class PerigoRiscoAdmin(admin.ModelAdmin):
         }),
     )
 
-@admin.register(Acidente)
+#@admin.register(Acidente)
 class AcidenteAdmin(admin.ModelAdmin):
     list_display = ['tipo', 'data', 'local', 'vitima', 'causa_raiz_breve']
     list_filter = ['tipo', 'data']
@@ -34,7 +34,7 @@ class AcidenteAdmin(admin.ModelAdmin):
         return obj.causa_raiz[:50] + '...' if obj.causa_raiz and len(obj.causa_raiz) > 50 else obj.causa_raiz
     causa_raiz_breve.short_description = 'Causa Raiz'
 
-@admin.register(TreinamentoSST)
+#@admin.register(TreinamentoSST)
 class TreinamentoSSTAdmin(admin.ModelAdmin):
     list_display = ['nome', 'data', 'instrutor', 'participantes_count']
     list_filter = ['data', 'instrutor']
