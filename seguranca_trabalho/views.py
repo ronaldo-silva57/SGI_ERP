@@ -7,18 +7,21 @@ from .models import PerigoRisco, Acidente, TreinamentoSST
 from .forms import PerigoRiscoForm, AcidenteForm, TreinamentoSSTForm
 
 # PerigoRisco Views
-class PerigoRiscoListView(LoginRequiredMixin, ListView):
+#class PerigoRiscoListView(LoginRequiredMixin, ListView):
+class PerigoRiscoListView(ListView):
     model = PerigoRisco
     template_name = 'seguranca_trabalho/perigo_list.html'
     context_object_name = 'perigos'
     paginate_by = 10
 
-class PerigoRiscoDetailView(LoginRequiredMixin, DetailView):
+#class PerigoRiscoDetailView(LoginRequiredMixin, DetailView):
+class PerigoRiscoDetailView(DetailView):
     model = PerigoRisco
     template_name = 'seguranca_trabalho/perigo_detail.html'
     context_object_name = 'perigo'
 
-class PerigoRiscoCreateView(LoginRequiredMixin, CreateView):
+#class PerigoRiscoCreateView(LoginRequiredMixin, CreateView):
+class PerigoRiscoCreateView(CreateView):
     model = PerigoRisco
     form_class = PerigoRiscoForm
     template_name = 'seguranca_trabalho/perigo_form.html'
@@ -33,7 +36,8 @@ class PerigoRiscoCreateView(LoginRequiredMixin, CreateView):
         initial['responsavel'] = self.request.user
         return initial
 
-class PerigoRiscoUpdateView(LoginRequiredMixin, UpdateView):
+#class PerigoRiscoUpdateView(LoginRequiredMixin, UpdateView):
+class PerigoRiscoUpdateView(UpdateView):
     model = PerigoRisco
     form_class = PerigoRiscoForm
     template_name = 'seguranca_trabalho/perigo_form.html'
@@ -46,18 +50,21 @@ class PerigoRiscoUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 # Acidente Views
-class AcidenteListView(LoginRequiredMixin, ListView):
+#class AcidenteListView(LoginRequiredMixin, ListView):
+class AcidenteListView(ListView):
     model = Acidente
     template_name = 'seguranca_trabalho/acidente_list.html'
     context_object_name = 'acidentes'
     paginate_by = 10
 
-class AcidenteDetailView(LoginRequiredMixin, DetailView):
+#class AcidenteDetailView(LoginRequiredMixin, DetailView):
+class AcidenteDetailView(DetailView):
     model = Acidente
     template_name = 'seguranca_trabalho/acidente_detail.html'
     context_object_name = 'acidente'
 
-class AcidenteCreateView(LoginRequiredMixin, CreateView):
+#class AcidenteCreateView(LoginRequiredMixin, CreateView):
+class AcidenteCreateView(CreateView):
     model = Acidente
     form_class = AcidenteForm
     template_name = 'seguranca_trabalho/acidente_form.html'
@@ -67,7 +74,8 @@ class AcidenteCreateView(LoginRequiredMixin, CreateView):
         messages.success(self.request, 'Acidente/Incidente registrado com sucesso!')
         return super().form_valid(form)
 
-class AcidenteUpdateView(LoginRequiredMixin, UpdateView):
+#class AcidenteUpdateView(LoginRequiredMixin, UpdateView):
+class AcidenteUpdateView(UpdateView):
     model = Acidente
     form_class = AcidenteForm
     template_name = 'seguranca_trabalho/acidente_form.html'
@@ -80,18 +88,21 @@ class AcidenteUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 # TreinamentoSST Views
-class TreinamentoSSTListView(LoginRequiredMixin, ListView):
+#class TreinamentoSSTListView(LoginRequiredMixin, ListView):
+class TreinamentoSSTListView(ListView):
     model = TreinamentoSST
     template_name = 'seguranca_trabalho/treinamento_list.html'
     context_object_name = 'treinamentos'
     paginate_by = 10
 
-class TreinamentoSSTDetailView(LoginRequiredMixin, DetailView):
+#class TreinamentoSSTDetailView(LoginRequiredMixin, DetailView):
+class TreinamentoSSTDetailView(DetailView):
     model = TreinamentoSST
     template_name = 'seguranca_trabalho/treinamento_detail.html'
     context_object_name = 'treinamento'
 
-class TreinamentoSSTCreateView(LoginRequiredMixin, CreateView):
+#class TreinamentoSSTCreateView(LoginRequiredMixin, CreateView):
+class TreinamentoSSTCreateView(CreateView):
     model = TreinamentoSST
     form_class = TreinamentoSSTForm
     template_name = 'seguranca_trabalho/treinamento_form.html'
@@ -106,6 +117,7 @@ class TreinamentoSSTCreateView(LoginRequiredMixin, CreateView):
         initial['instrutor'] = self.request.user
         return initial
 
+#class TreinamentoSSTUpdateView(UpdateView):
 class TreinamentoSSTUpdateView(LoginRequiredMixin, UpdateView):
     model = TreinamentoSST
     form_class = TreinamentoSSTForm

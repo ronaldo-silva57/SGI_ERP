@@ -7,7 +7,8 @@ from django.utils import timezone
 from .models import NaoConformidade
 from .forms import NaoConformidadeForm
 
-class NaoConformidadeListView(LoginRequiredMixin, ListView):
+#class NaoConformidadeListView(LoginRequiredMixin, ListView):
+class NaoConformidadeListView(ListView):
     model = NaoConformidade
     template_name = 'nao_conformidades/naoconformidade_list.html'
     context_object_name = 'nao_conformidades'
@@ -37,7 +38,8 @@ class NaoConformidadeListView(LoginRequiredMixin, ListView):
         context['today'] = timezone.now().date()
         return context
 
-class NaoConformidadeDetailView(LoginRequiredMixin, DetailView):
+#class NaoConformidadeDetailView(LoginRequiredMixin, DetailView):
+class NaoConformidadeDetailView(DetailView):
     model = NaoConformidade
     template_name = 'nao_conformidades/naoconformidade_detail.html'
     context_object_name = 'nc'
@@ -47,7 +49,8 @@ class NaoConformidadeDetailView(LoginRequiredMixin, DetailView):
         context['today'] = timezone.now().date()
         return context
 
-class NaoConformidadeCreateView(LoginRequiredMixin, CreateView):
+#class NaoConformidadeCreateView(LoginRequiredMixin, CreateView):
+class NaoConformidadeCreateView(CreateView):
     model = NaoConformidade
     form_class = NaoConformidadeForm
     template_name = 'nao_conformidades/naoconformidade_form.html'
@@ -66,7 +69,8 @@ class NaoConformidadeCreateView(LoginRequiredMixin, CreateView):
         messages.success(self.request, 'Não conformidade registrada com sucesso!')
         return super().form_valid(form)
 
-class NaoConformidadeUpdateView(LoginRequiredMixin, UpdateView):
+#class NaoConformidadeUpdateView(LoginRequiredMixin, UpdateView):
+class NaoConformidadeUpdateView(UpdateView):
     model = NaoConformidade
     form_class = NaoConformidadeForm
     template_name = 'nao_conformidades/naoconformidade_form.html'

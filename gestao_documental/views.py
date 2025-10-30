@@ -51,7 +51,7 @@ class DocumentoUpdateView(UpdateView):
         messages.success(self.request, 'Documento atualizado com sucesso!')
         return super().form_valid(form)
 
-#@login_required
+##@login_required
 def documento_dashboard(request):
     total_documentos = Documento.objects.count()
     documentos_aprovados = Documento.objects.filter(status='aprovado').count()

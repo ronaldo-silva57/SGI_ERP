@@ -18,7 +18,8 @@ import datetime
 from .models import Indicador, MedicaoIndicador
 from .forms import IndicadorForm, MedicaoIndicadorForm
 
-class IndicadorListView(LoginRequiredMixin, ListView):
+#class IndicadorListView(LoginRequiredMixin, ListView):
+class IndicadorListView(ListView):
     model = Indicador
     template_name = 'indicadores/indicador_list.html'
     context_object_name = 'indicadores'
@@ -89,12 +90,14 @@ class IndicadorListView(LoginRequiredMixin, ListView):
         
         return context
 
-class IndicadorDetailView(LoginRequiredMixin, DetailView):
+#class IndicadorDetailView(LoginRequiredMixin, DetailView):
+class IndicadorDetailView(DetailView):
     model = Indicador
     template_name = 'indicadores/indicador_detail.html'
     context_object_name = 'indicador'
 
-class IndicadorCreateView(LoginRequiredMixin, CreateView):
+#class IndicadorCreateView(LoginRequiredMixin, CreateView):
+class IndicadorCreateView(CreateView):
     model = Indicador
     form_class = IndicadorForm
     template_name = 'indicadores/indicador_form.html'
@@ -104,7 +107,8 @@ class IndicadorCreateView(LoginRequiredMixin, CreateView):
         messages.success(self.request, 'Indicador criado com sucesso!')
         return super().form_valid(form)
 
-class IndicadorUpdateView(LoginRequiredMixin, UpdateView):
+#class IndicadorUpdateView(LoginRequiredMixin, UpdateView):
+class IndicadorUpdateView(UpdateView):
     model = Indicador
     form_class = IndicadorForm
     template_name = 'indicadores/indicador_form.html'

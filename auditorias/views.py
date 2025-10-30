@@ -39,7 +39,8 @@ class AuditoriaCreateView(LoginRequiredMixin, CreateView):
         messages.success(self.request, 'Auditoria criada com sucesso!')
         return super().form_valid(form)
 
-class AuditoriaUpdateView(LoginRequiredMixin, UpdateView):
+#class AuditoriaUpdateView(LoginRequiredMixin, UpdateView):
+class AuditoriaUpdateView(UpdateView):
     model = Auditoria
     form_class = AuditoriaForm
     template_name = 'auditorias/auditoria_form.html'

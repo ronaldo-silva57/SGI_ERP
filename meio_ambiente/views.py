@@ -7,18 +7,21 @@ from .models import AspectoImpactoAmbiental, LicencaAmbiental, EmergenciaAmbient
 from .forms import AspectoImpactoAmbientalForm, LicencaAmbientalForm, EmergenciaAmbientalForm
 
 # AspectoImpactoAmbiental Views
-class AspectoImpactoListView(LoginRequiredMixin, ListView):
+#class AspectoImpactoListView(LoginRequiredMixin, ListView):
+class AspectoImpactoListView(ListView):
     model = AspectoImpactoAmbiental
     template_name = 'meio_ambiente/aspecto_list.html'
     context_object_name = 'aspectos'
     paginate_by = 10
 
-class AspectoImpactoDetailView(LoginRequiredMixin, DetailView):
+#class AspectoImpactoDetailView(LoginRequiredMixin, DetailView):
+class AspectoImpactoDetailView(DetailView):
     model = AspectoImpactoAmbiental
     template_name = 'meio_ambiente/aspecto_detail.html'
     context_object_name = 'aspecto'
 
-class AspectoImpactoCreateView(LoginRequiredMixin, CreateView):
+#class AspectoImpactoCreateView(LoginRequiredMixin, CreateView):
+class AspectoImpactoCreateView(CreateView):
     model = AspectoImpactoAmbiental
     form_class = AspectoImpactoAmbientalForm
     template_name = 'meio_ambiente/aspecto_form.html'
@@ -33,7 +36,8 @@ class AspectoImpactoCreateView(LoginRequiredMixin, CreateView):
         initial['responsavel'] = self.request.user
         return initial
 
-class AspectoImpactoUpdateView(LoginRequiredMixin, UpdateView):
+#class AspectoImpactoUpdateView(LoginRequiredMixin, UpdateView):
+class AspectoImpactoUpdateView(UpdateView):
     model = AspectoImpactoAmbiental
     form_class = AspectoImpactoAmbientalForm
     template_name = 'meio_ambiente/aspecto_form.html'
@@ -46,12 +50,14 @@ class AspectoImpactoUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 # LicencaAmbiental Views
+#class LicencaAmbientalListView(ListView):
 class LicencaAmbientalListView(LoginRequiredMixin, ListView):
     model = LicencaAmbiental
     template_name = 'meio_ambiente/licenca_list.html'
     context_object_name = 'licencas'
     paginate_by = 10
 
+#class LicencaAmbientalCreateView(CreateView):
 class LicencaAmbientalCreateView(LoginRequiredMixin, CreateView):
     model = LicencaAmbiental
     form_class = LicencaAmbientalForm
@@ -62,7 +68,8 @@ class LicencaAmbientalCreateView(LoginRequiredMixin, CreateView):
         messages.success(self.request, 'Licença ambiental cadastrada com sucesso!')
         return super().form_valid(form)
 
-class LicencaAmbientalUpdateView(LoginRequiredMixin, UpdateView):
+#class LicencaAmbientalUpdateView(LoginRequiredMixin, UpdateView):
+class LicencaAmbientalUpdateView(UpdateView):
     model = LicencaAmbiental
     form_class = LicencaAmbientalForm
     template_name = 'meio_ambiente/licenca_form.html'
@@ -73,13 +80,15 @@ class LicencaAmbientalUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 # EmergenciaAmbiental Views
-class EmergenciaAmbientalListView(LoginRequiredMixin, ListView):
+#class EmergenciaAmbientalListView(LoginRequiredMixin, ListView):
+class EmergenciaAmbientalListView(ListView):
     model = EmergenciaAmbiental
     template_name = 'meio_ambiente/emergencia_list.html'
     context_object_name = 'emergencias'
     paginate_by = 10
 
-class EmergenciaAmbientalCreateView(LoginRequiredMixin, CreateView):
+#class EmergenciaAmbientalCreateView(LoginRequiredMixin, CreateView):
+class EmergenciaAmbientalCreateView(CreateView):
     model = EmergenciaAmbiental
     form_class = EmergenciaAmbientalForm
     template_name = 'meio_ambiente/emergencia_form.html'
@@ -94,7 +103,8 @@ class EmergenciaAmbientalCreateView(LoginRequiredMixin, CreateView):
         initial['responsavel'] = self.request.user
         return initial
 
-class EmergenciaAmbientalUpdateView(LoginRequiredMixin, UpdateView):
+#class EmergenciaAmbientalUpdateView(LoginRequiredMixin, UpdateView):
+class EmergenciaAmbientalUpdateView(UpdateView):
     model = EmergenciaAmbiental
     form_class = EmergenciaAmbientalForm
     template_name = 'meio_ambiente/emergencia_form.html'

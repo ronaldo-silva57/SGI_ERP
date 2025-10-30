@@ -6,7 +6,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import AnaliseCritica
 from .forms import AnaliseCriticaForm
 
-class AnaliseCriticaListView(LoginRequiredMixin, ListView):
+#class AnaliseCriticaListView(LoginRequiredMixin, ListView):
+class AnaliseCriticaListView(ListView):
     model = AnaliseCritica
     template_name = 'analise_critica/analise_list.html'
     context_object_name = 'analises'
@@ -15,7 +16,8 @@ class AnaliseCriticaListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return AnaliseCritica.objects.all().order_by('-data_reuniao')
 
-class AnaliseCriticaDetailView(LoginRequiredMixin, DetailView):
+#class AnaliseCriticaDetailView(LoginRequiredMixin, DetailView):
+class AnaliseCriticaDetailView(DetailView):
     model = AnaliseCritica
     template_name = 'analise_critica/analise_detail.html'
     context_object_name = 'analise'
@@ -32,7 +34,8 @@ class AnaliseCriticaDetailView(LoginRequiredMixin, DetailView):
         context['temas_sst_list'] = analise._text_to_list(analise.temas_sst)
         return context
 
-class AnaliseCriticaCreateView(LoginRequiredMixin, CreateView):
+#class AnaliseCriticaCreateView(LoginRequiredMixin, CreateView):
+class AnaliseCriticaCreateView(CreateView):
     model = AnaliseCritica
     form_class = AnaliseCriticaForm
     template_name = 'analise_critica/analise_form.html'
@@ -48,7 +51,8 @@ class AnaliseCriticaCreateView(LoginRequiredMixin, CreateView):
         initial['coordenador'] = self.request.user
         return initial
 
-class AnaliseCriticaUpdateView(LoginRequiredMixin, UpdateView):
+#class AnaliseCriticaUpdateView(LoginRequiredMixin, UpdateView):
+class AnaliseCriticaUpdateView(UpdateView):
     model = AnaliseCritica
     form_class = AnaliseCriticaForm
     template_name = 'analise_critica/analise_form.html'
