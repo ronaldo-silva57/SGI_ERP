@@ -1,4 +1,3 @@
-# models.py - ATUALIZADO
 from django.db import models
 from usuarios.models import UsuarioCustomizado
 
@@ -24,8 +23,20 @@ class Documento(models.Model):
         ('aprovado', 'Aprovado'),
         ('obsoleto', 'Obsoleto'),
     ]
+
+    TIPO_CHOICES = [
+        ('PO', 'Política'),
+        ('MQ', 'Manual'),
+        ('PR', 'Procedimento'),
+        ('IT', 'Instrução de Trabalho'),
+        ('POP', 'Procedimento Operacional Padrão'),
+        ('FM', 'Formulário'),
+        ('RG', 'Registro'),
+        ('OT', 'Outro'),    
+    ]
     
     codigo = models.CharField(max_length=20, unique=True)
+    tipo_documento = models.CharField(max_length=5, choices=TIPO_CHOICES, default='PR')
     norma = models.CharField(max_length=20, choices=NORMA_CHOICES, default='iso9001')
     titulo = models.CharField(max_length=200)
     categoria = models.ForeignKey(CategoriaDocumento, on_delete=models.PROTECT)
@@ -37,11 +48,22 @@ class Documento(models.Model):
     elaborador = models.ForeignKey(UsuarioCustomizado, on_delete=models.PROTECT, related_name='documentos_elaborados')
     aprovador = models.ForeignKey(UsuarioCustomizado, on_delete=models.PROTECT, related_name='documentos_aprovados', null=True, blank=True)
     controle_alteracoes = models.TextField(help_text="Registro de alterações entre revisões", blank=True)
+    versao_anterior = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)
+    elaborador = models.ForeignKey(UsuarioCustomizado, on_delete=models.PROTECT, related_name='documentos_elaborados')
+    aprovador = models.ForeignKey(UsuarioCustomizado, on_delete=models.PROTECT, related_name='documentos_aprovados', null=True, blank=True)
     
     class Meta:
         verbose_name = "Documento"
         verbose_name_plural = "Documentos"
         ordering = ['-data_elaboracao']
+
+    def delete(self, *args, **kwargs):
+        if self.status == 'aprovado':
+            self.status = 'obsoletp'
+            self.ativo = False
+            self.save()
+        else:
+            super().delete(*args, **kwargs)
     
     def __str__(self):
         return f"{self.codigo} - Rev. {self.revisao} - {self.titulo}"

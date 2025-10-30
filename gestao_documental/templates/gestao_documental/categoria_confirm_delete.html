@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Excluir Categoria - Zenith QMS{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-exclamation-triangle me-2 text-danger"></i>Excluir Categoria
+    </h1>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="card-title mb-0">Confirmação de Exclusão</h5>
+            </div>
+            <div class="card-body">
+                <p class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>Atenção!</strong> Esta ação não pode ser desfeita.
+                </p>
+                
+                <p>Você está prestes a excluir a categoria:</p>
+                
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h6 class="card-title">{{ object.codigo }} - {{ object.nome }}</h6>
+                        <p class="card-text text-muted">{{ object.descricao }}</p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                Documentos nesta categoria: <span class="badge bg-info">{{ object.documento_set.count }}</span>
+                            </small>
+                        </p>
+                    </div>
+                </div>
+
+                {% if object.documento_set.count > 0 %}
+                <div class="alert alert-danger">
+                    <i class="bi bi-x-circle-fill me-2"></i>
+                    <strong>Não é possível excluir!</strong> Esta categoria possui {{ object.documento_set.count }} documento(s) vinculado(s). 
+                    Você precisa mover ou excluir esses documentos primeiro.
+                </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'gestao_documental:categoria-list' %}" class="btn btn-outline-secondary me-md-2">
+                            <i class="bi bi-arrow-left me-1"></i>Cancelar
+                        </a>
+                        {% if object.documento_set.count == 0 %}
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>Confirmar Exclusão
+                        </button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

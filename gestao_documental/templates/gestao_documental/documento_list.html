@@ -11,6 +11,9 @@
         <a href="{% url 'gestao_documental:documento-create' %}" class="btn btn-primary">
             <i class="bi bi-plus-circle me-1"></i>Novo Documento
         </a>
+        <a href="{% url 'gestao_documental:documento-create' %}" class="btn btn-secondary ms-2">
+            <i class="bi bi-plus-circle me-1"></i>Nova Categoria
+        </a>
     </div>
 </div>
 
@@ -36,6 +39,20 @@
                     <option value="revisao" {% if request.GET.status == 'revisao' %}selected{% endif %}>Em Revisão</option>
                     <option value="aprovado" {% if request.GET.status == 'aprovado' %}selected{% endif %}>Aprovado</option>
                     <option value="obsoleto" {% if request.GET.status == 'obsoleto' %}selected{% endif %}>Obsoleto</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="tipo_documento" class="form-label">Tipo de Documento</label>
+                <select name="tipo_documento" id="tipo_documento" class="form-select">
+                    <option value="">Todos os Tipos</option>
+                    <option value="PO" {% if request.GET.tipo_documento == 'PO' %}selected{% endif %}>Política</option>
+                    <option value="MQ" {% if request.GET.tipo_documento == 'MQ' %}selected{% endif %}>Manual</option>
+                    <option value="PR" {% if request.GET.tipo_documento == 'PR' %}selected{% endif %}>Procedimento</option>
+                    <option value="IT" {% if request.GET.tipo_documento == 'IT' %}selected{% endif %}>Instrução de Trabalho</option>
+                    <option value="POP" {% if request.GET.tipo_documento == 'POP' %}selected{% endif %}>POP</option>
+                    <option value="FM" {% if request.GET.tipo_documento == 'FM' %}selected{% endif %}>Formulário</option>
+                    <option value="RG" {% if request.GET.tipo_documento == 'RG' %}selected{% endif %}>Registro</option>
+                    <option value="OT" {% if request.GET.tipo_documento == 'OT' %}selected{% endif %}>Outro</option>
                 </select>
             </div>
             <div class="col-md-3">
@@ -74,6 +91,7 @@
                     <tr>
                         <th>Código</th>
                         <th>Título</th>
+                        <th>Tipo</th>
                         <th>Norma</th>
                         <th>Categoria</th>
                         <th>Revisão</th>
@@ -89,6 +107,25 @@
                             <strong>{{ documento.codigo }}</strong>
                         </td>
                         <td>{{ documento.titulo }}</td>
+                        <td>
+                            {% if documento.tipo_documento == 'PO' %}
+                                <span class="badge bg-primary">Política</span>
+                            {% elif documento.tipo_documento == 'MQ' %}
+                                <span class="badge bg-success">Manual</span>
+                            {% elif documento.tipo_documento == 'PR' %}
+                                <span class="badge bg-info">Procedimento</span>
+                            {% elif documento.tipo_documento == 'IT' %}
+                                <span class="badge bg-warning">Instrução</span>
+                            {% elif documento.tipo_documento == 'POP' %}
+                                <span class="badge bg-secondary">POP</span>
+                            {% elif documento.tipo_documento == 'FM' %}
+                                <span class="badge bg-light text-dark">Formulário</span>
+                            {% elif documento.tipo_documento == 'RG' %}
+                                <span class="badge bg-dark">Registro</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Outro</span>
+                            {% endif %}
+                        </td>
                         <td>
                             {% if documento.norma == 'iso9001' %}
                                 <span class="badge bg-primary">ISO 9001</span>
