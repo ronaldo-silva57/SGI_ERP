@@ -32,20 +32,27 @@
                             {{ form.codigo|as_crispy_field }}
                         </div>
                         <div class="col-md-6">
+                            {{ form.norma|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            {{ form.titulo|as_crispy_field }}
+                        </div>
+                        <div class="col-md-4">
                             {{ form.categoria|as_crispy_field }}
                         </div>
                     </div>
 
-                    {{ form.titulo|as_crispy_field }}
-
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             {{ form.revisao|as_crispy_field }}
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             {{ form.status|as_crispy_field }}
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             {{ form.data_aprovacao|as_crispy_field }}
                         </div>
                     </div>
@@ -89,7 +96,16 @@
                         <strong>Data de Criação:</strong> {{ form.instance.data_elaboracao|date:"d/m/Y H:i" }}
                     </div>
                     <div class="col-md-6">
-                        <strong>Última Atualização:</strong> {% now "d/m/Y H:i" %}
+                        <strong>Norma:</strong> 
+                        {% if form.instance.norma == 'iso9001' %}
+                            <span class="badge bg-primary">ISO 9001 - Qualidade</span>
+                        {% elif form.instance.norma == 'iso14001' %}
+                            <span class="badge bg-success">ISO 14001 - Meio Ambiente</span>
+                        {% elif form.instance.norma == 'iso45001' %}
+                            <span class="badge bg-warning">ISO 45001 - Saúde e Segurança</span>
+                        {% else %}
+                            <span class="badge bg-info">Integrado (SGI)</span>
+                        {% endif %}
                     </div>
                 </div>
             </div>

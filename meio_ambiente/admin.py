@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import AspectoImpactoAmbiental, LicencaAmbiental, EmergenciaAmbiental
 
-#@admin.register(AspectoImpactoAmbiental)
+@admin.register(AspectoImpactoAmbiental)
 class AspectoImpactoAmbientalAdmin(admin.ModelAdmin):
     list_display = ['processo', 'aspecto', 'impacto', 'nivel_significancia', 'responsavel', 'status', 'data_avaliacao']
     list_filter = ['nivel_significancia', 'status', 'data_avaliacao', 'responsavel']
@@ -22,7 +22,7 @@ class AspectoImpactoAmbientalAdmin(admin.ModelAdmin):
         }),
     )
 
-#@admin.register(LicencaAmbiental)
+@admin.register(LicencaAmbiental)
 class LicencaAmbientalAdmin(admin.ModelAdmin):
     list_display = ['numero', 'orgao_emissor', 'validade', 'esta_valida']
     list_filter = ['orgao_emissor', 'validade']
@@ -35,7 +35,7 @@ class LicencaAmbientalAdmin(admin.ModelAdmin):
     esta_valida.boolean = True
     esta_valida.short_description = 'Válida'
 
-#@admin.register(EmergenciaAmbiental)
+@admin.register(EmergenciaAmbiental)
 class EmergenciaAmbientalAdmin(admin.ModelAdmin):
     list_display = ['tipo_evento', 'local', 'data', 'responsavel']
     list_filter = ['tipo_evento', 'data']

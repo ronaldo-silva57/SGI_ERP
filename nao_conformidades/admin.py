@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import NaoConformidade
 
-#@admin.register(NaoConformidade)
+@admin.register(NaoConformidade)
 class NaoConformidadeAdmin(admin.ModelAdmin):
     list_display = ['numero', 'titulo', 'setor_envolvido', 'data_deteccao', 'gravidade', 'status']
     list_filter = ['status', 'gravidade', 'setor_envolvido', 'data_deteccao']

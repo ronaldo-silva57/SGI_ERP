@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ usuario.get_full_name }} - Detalhes do Usuário{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-person me-2"></i>{{ usuario.get_full_name }}
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{% url 'usuarios:usuario-update' usuario.pk %}" class="btn btn-outline-secondary">
+                <i class="bi bi-pencil me-1"></i>Editar
+            </a>
+            <a href="{% url 'usuarios:usuario-list' %}" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left me-1"></i>Voltar
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Informações Básicas -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Informações Pessoais</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Nome Completo:</strong></div>
+                    <div class="col-sm-8">{{ usuario.get_full_name }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Nome de Usuário:</strong></div>
+                    <div class="col-sm-8">{{ usuario.username }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Email:</strong></div>
+                    <div class="col-sm-8">{{ usuario.email }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Telefone:</strong></div>
+                    <div class="col-sm-8">{{ usuario.telefone|default:"-" }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informações Profissionais -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Informações Profissionais</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Tipo de Usuário:</strong></div>
+                    <div class="col-sm-8">
+                        <span class="badge bg-secondary">{{ usuario.get_tipo_usuario_display }}</span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Departamento:</strong></div>
+                    <div class="col-sm-8">{{ usuario.departamento|default:"-" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Data de Criação:</strong></div>
+                    <div class="col-sm-8">{{ usuario.data_criacao|date:"d/m/Y H:i" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4"><strong>Último Login:</strong></div>
+                    <div class="col-sm-8">
+                        {% if usuario.last_login %}
+                            {{ usuario.last_login|date:"d/m/Y H:i" }}
+                        {% else %}
+                            <span class="text-muted">Nunca logou</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Status e Permissões -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Status e Permissões</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>Status:</strong><br>
+                    {% if usuario.is_active %}
+                        <span class="badge bg-success">Ativo</span>
+                    {% else %}
+                        <span class="badge bg-danger">Inativo</span>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <strong>Superusuário:</strong><br>
+                    {% if usuario.is_superuser %}
+                        <span class="badge bg-warning">Sim</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Não</span>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <strong>Staff:</strong><br>
+                    {% if usuario.is_staff %}
+                        <span class="badge bg-info">Sim</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Não</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Ações Rápidas -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Ações</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'usuarios:usuario-update' usuario.pk %}" class="btn btn-outline-primary">
+                        <i class="bi bi-pencil me-1"></i>Editar Usuário
+                    </a>
+                    <a href="{% url 'usuarios:usuario-list' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-list me-1"></i>Ver Todos Usuários
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metadados -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Metadados</h5>
+            </div>
+            <div class="card-body">
+                <small class="text-muted">
+                    <div><strong>ID:</strong> {{ usuario.id }}</div>
+                    <div><strong>Criado em:</strong> {{ usuario.data_criacao|date:"d/m/Y H:i" }}</div>
+                    <div><strong>Última atualização:</strong> {{ usuario.date_joined|date:"d/m/Y H:i" }}</div>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

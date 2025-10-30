@@ -1,47 +1,110 @@
 {% extends 'base.html' %}
 {% block title %}Acidentes e Incidentes{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2 text-danger"><i class="bi bi-hospital me-2"></i>Acidentes e Incidentes</h1>
     <a href="{% url 'seguranca:acidente-create' %}" class="btn btn-primary">
         <i class="bi bi-plus-circle me-1"></i>Novo Registro
     </a>
 </div>
 
+<!-- Filtros -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label for="tipo" class="form-label">Tipo</label>
+                <select name="tipo" id="tipo" class="form-select">
+                    <option value="">Todos os Tipos</option>
+                    <option value="acidente" {% if request.GET.tipo == 'acidente' %}selected{% endif %}>Acidente</option>
+                    <option value="incidente" {% if request.GET.tipo == 'incidente' %}selected{% endif %}>Incidente</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="local" class="form-label">Local</label>
+                <input type="text" name="local" id="local" class="form-control" 
+                       placeholder="Filtrar por local..." value="{{ request.GET.local }}">
+            </div>
+            <div class="col-md-3">
+                <label for="data_inicio" class="form-label">Data Início</label>
+                <input type="date" name="data_inicio" id="data_inicio" class="form-control" 
+                       value="{{ request.GET.data_inicio }}">
+            </div>
+            <div class="col-md-3">
+                <label for="data_fim" class="form-label">Data Fim</label>
+                <input type="date" name="data_fim" id="data_fim" class="form-control" 
+                       value="{{ request.GET.data_fim }}">
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-funnel me-1"></i>Filtrar
+                </button>
+                <a href="{% url 'seguranca:acidente-list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Limpar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="card">
     <div class="card-body">
         {% if acidentes %}
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Tipo</th>
-                    <th>Data</th>
-                    <th>Local</th>
-                    <th>Vítima</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for acidente in acidentes %}
-                <tr>
-                    <td>{{ acidente.get_tipo_display }}</td>
-                    <td>{{ acidente.data|date:"d/m/Y" }}</td>
-                    <td>{{ acidente.local }}</td>
-                    <td>{{ acidente.vitima.get_full_name }}</td>
-                    <td>
-                        <a href="{% url 'seguranca:acidente-detail' acidente.pk %}" class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-eye"></i>
-                        </a>
-                        <a href="{% url 'seguranca:acidente-update' acidente.pk %}" class="btn btn-sm btn-outline-secondary">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Data</th>
+                        <th>Local</th>
+                        <th>Vítima</th>
+                        <th>Descrição</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for acidente in acidentes %}
+                    <tr>
+                        <td>
+                            {% if acidente.tipo == 'acidente' %}
+                                <span class="badge bg-danger">{{ acidente.get_tipo_display }}</span>
+                            {% else %}
+                                <span class="badge bg-warning">{{ acidente.get_tipo_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ acidente.data|date:"d/m/Y" }}</td>
+                        <td>{{ acidente.local }}</td>
+                        <td>{{ acidente.vitima.get_full_name|default:"-" }}</td>
+                        <td>{{ acidente.descricao|truncatewords:10 }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'seguranca:acidente-detail' acidente.pk %}" class="btn btn-outline-primary">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'seguranca:acidente-update' acidente.pk %}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                {% if acidente.evidencias %}
+                                <a href="{{ acidente.evidencias.url }}" class="btn btn-outline-success" download>
+                                    <i class="bi bi-download"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
-        <p class="text-muted">Nenhum acidente ou incidente registrado.</p>
+        <div class="text-center py-4">
+            <i class="bi bi-hospital display-4 text-muted"></i>
+            <h4 class="text-muted mt-3">Nenhum acidente encontrado</h4>
+            <p class="text-muted">Tente ajustar os filtros ou criar um novo registro.</p>
+            <a href="{% url 'seguranca:acidente-create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>Criar Primeiro Registro
+            </a>
+        </div>
         {% endif %}
     </div>
 </div>

@@ -144,3 +144,66 @@ def seguranca_trabalho_dashboard(request):
         'treinamentos_count': treinamentos_count,
     }
     return render(request, 'seguranca_trabalho/dashboard.html', context)
+
+def perigo_list(request):
+    perigos = PerigoRisco.objects.all()
+
+    nivel_risco = request.GET.get('nivel_risco')
+    status = request.GET.get('status')
+    atividade = request.GET.get('atividade')
+
+    if nivel_risco:
+        perigos = perigos.filter(nivel_risco=nivel_risco)
+    if status:
+        perigos = perigos.filter(status=status)
+    if atividade:
+        perigos = perigos.filter(atividade__icontains=atividade)
+
+    context = {
+        'perigos': perigos,
+    }
+    return render(request, 'seguranca_trabalho/perigo_list.html', context)
+
+from django.utils import timezone
+
+def acidente_list(request):
+    acidentes = Acidente.objects.all()
+
+    tipo = request.GET.get('tipo')
+    local = request.GET.get('local')
+    data_inicio = request.GET.get('data_inicio')
+    data_fim = request.GET.get('data_fim')
+
+    if tipo:
+        acidentes = acidentes.filter(tipo=tipo)
+    if local:
+        acidentes = acidentes.filter(local__icontains=local)
+    if data_inicio:
+        acidentes = acidentes.filter(data__gte=data_inicio)
+    if data_fim:
+        acidentes = acidentes.filter(data__lte=data_fim)
+
+    context = {
+        'acidentes': acidentes,
+        'today': timezone.now().date(),
+    }
+    return render(request, 'seguranca_trabalho/acidente_list.html', context)
+
+def treinamento_list(request):
+    treinamentos = TreinamentoSST.objects.all()
+
+    nome = request.GET.get('nome')
+    instrutor = request.GET.get('instrutor')
+    data = request.GET.get('data')
+
+    if nome:
+        treinamentos = treinamentos.filter(nome__icontains=nome)
+    if instrutor:
+        treinamentos = treinamentos.filter(instrutor__first_name__icontains=instrutor)
+    if data:
+        treinamentos = treinamentos.filter(data=data)
+
+    context = {
+        'treinamentos': treinamentos,
+    }
+    return render(request, 'seguranca_trabalho/treinamento_list.html', context)

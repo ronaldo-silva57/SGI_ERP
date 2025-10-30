@@ -1,11 +1,51 @@
 {% extends 'base.html' %}
 {% block title %}Perigos e Riscos{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2 text-danger"><i class="bi bi-exclamation-triangle me-2"></i>Perigos e Riscos</h1>
     <a href="{% url 'seguranca:perigo-create' %}" class="btn btn-primary">
         <i class="bi bi-plus-circle me-1"></i>Novo Perigo
     </a>
+</div>
+
+<!-- Filtros -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label for="nivel_risco" class="form-label">Nível de Risco</label>
+                <select name="nivel_risco" id="nivel_risco" class="form-select">
+                    <option value="">Todos os Níveis</option>
+                    <option value="baixo" {% if request.GET.nivel_risco == 'baixo' %}selected{% endif %}>Baixo</option>
+                    <option value="medio" {% if request.GET.nivel_risco == 'medio' %}selected{% endif %}>Médio</option>
+                    <option value="alto" {% if request.GET.nivel_risco == 'alto' %}selected{% endif %}>Alto</option>
+                    <option value="critico" {% if request.GET.nivel_risco == 'critico' %}selected{% endif %}>Crítico</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="status" class="form-label">Status</label>
+                <select name="status" id="status" class="form-select">
+                    <option value="">Todos os Status</option>
+                    <option value="identificado" {% if request.GET.status == 'identificado' %}selected{% endif %}>Identificado</option>
+                    <option value="controlado" {% if request.GET.status == 'controlado' %}selected{% endif %}>Controlado</option>
+                    <option value="eliminado" {% if request.GET.status == 'eliminado' %}selected{% endif %}>Eliminado</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="atividade" class="form-label">Atividade</label>
+                <input type="text" name="atividade" id="atividade" class="form-control" 
+                       placeholder="Filtrar por atividade..." value="{{ request.GET.atividade }}">
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-funnel me-1"></i>Filtrar
+                </button>
+                <a href="{% url 'seguranca:perigo-list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Limpar
+                </a>
+            </div>
+        </form>
+    </div>
 </div>
 
 <div class="card">
@@ -20,6 +60,7 @@
                         <th>Risco</th>
                         <th>Nível</th>
                         <th>Status</th>
+                        <th>Data Identificação</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -29,15 +70,36 @@
                         <td>{{ perigo.atividade }}</td>
                         <td>{{ perigo.perigo }}</td>
                         <td>{{ perigo.risco }}</td>
-                        <td>{{ perigo.get_nivel_risco_display }}</td>
-                        <td>{{ perigo.get_status_display }}</td>
                         <td>
-                            <a href="{% url 'seguranca:perigo-detail' perigo.pk %}" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                            <a href="{% url 'seguranca:perigo-update' perigo.pk %}" class="btn btn-sm btn-outline-secondary">
-                                <i class="bi bi-pencil"></i>
-                            </a>
+                            {% if perigo.nivel_risco == 'critico' %}
+                                <span class="badge bg-danger">{{ perigo.get_nivel_risco_display }}</span>
+                            {% elif perigo.nivel_risco == 'alto' %}
+                                <span class="badge bg-warning">{{ perigo.get_nivel_risco_display }}</span>
+                            {% elif perigo.nivel_risco == 'medio' %}
+                                <span class="badge bg-info">{{ perigo.get_nivel_risco_display }}</span>
+                            {% else %}
+                                <span class="badge bg-success">{{ perigo.get_nivel_risco_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if perigo.status == 'identificado' %}
+                                <span class="badge bg-warning">{{ perigo.get_status_display }}</span>
+                            {% elif perigo.status == 'controlado' %}
+                                <span class="badge bg-info">{{ perigo.get_status_display }}</span>
+                            {% else %}
+                                <span class="badge bg-success">{{ perigo.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ perigo.data_identificacao|date:"d/m/Y" }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'seguranca:perigo-detail' perigo.pk %}" class="btn btn-outline-primary">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'seguranca:perigo-update' perigo.pk %}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -45,7 +107,14 @@
             </table>
         </div>
         {% else %}
-        <p class="text-muted">Nenhum perigo cadastrado.</p>
+        <div class="text-center py-4">
+            <i class="bi bi-exclamation-triangle display-4 text-muted"></i>
+            <h4 class="text-muted mt-3">Nenhum perigo encontrado</h4>
+            <p class="text-muted">Tente ajustar os filtros ou criar um novo perigo.</p>
+            <a href="{% url 'seguranca:perigo-create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>Criar Primeiro Perigo
+            </a>
+        </div>
         {% endif %}
     </div>
 </div>

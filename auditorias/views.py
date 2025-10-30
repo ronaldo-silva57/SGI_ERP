@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Auditoria, ProgramaAuditoria
 from .forms import AuditoriaForm, ProgramaAuditoriaForm
 
+#class AuditoriaListView(ListView):
 class AuditoriaListView(LoginRequiredMixin, ListView):
     model = Auditoria
     template_name = 'auditorias/auditoria_list.html'
@@ -15,12 +16,14 @@ class AuditoriaListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return Auditoria.objects.all().order_by('-data_planejada')
 
-class AuditoriaDetailView(LoginRequiredMixin, DetailView):
+#class AuditoriaDetailView(LoginRequiredMixin, DetailView):
+class AuditoriaDetailView(DetailView):
     model = Auditoria
     template_name = 'auditorias/auditoria_detail.html'
     context_object_name = 'auditoria'
 
-class AuditoriaCreateView(LoginRequiredMixin, CreateView):
+#class AuditoriaCreateView(LoginRequiredMixin, CreateView):
+class AuditoriaCreateView(CreateView):
     model = Auditoria
     form_class = AuditoriaForm
     template_name = 'auditorias/auditoria_form.html'

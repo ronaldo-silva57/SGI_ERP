@@ -81,6 +81,38 @@
             margin-right: 10px;
         }
 
+        .text-qualidade {
+            color: #3498db; /*azul*/
+        }
+
+        .text-meio-ambiente {
+            color: #27ae60; /*verde*/
+        }
+
+        .text-seguranca {
+            color: #e74c3c; /*vermelho*/
+        }
+
+            .text-metricas {
+                color: #f39c12; /*laranja*/
+            }
+
+            .border-left-qualidade {
+                border-left: 4px solid #3498db !important;
+            }
+
+            .border-left-meio-ambiente {
+                border-left: 4px solid #27ae60 !important;
+            }
+
+            .border-left-seguranca {
+                border-left: 4px solid #e74c3c !important;
+            }
+
+            .border-left-metricas {
+                border-left: 4px solid #f39c12 !important;
+            }
+
         .main-content {
             margin-left: var(--sidebar-width);
             min-height: 100vh;
@@ -165,6 +197,12 @@
             padding: 1rem 0;
             margin-top: auto;
         }
+
+        .card-header {
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
@@ -177,47 +215,57 @@
         
         <div class="position-sticky pt-3">
             <ul class="nav flex-column">
+                
+
+                <!-- Documentos Gerais do SGI -->
+                <li class="nav-item mt-3">
+                    <div class="card mx-3 mb-3 shadow-sm border-0" style="background: rgba(255,255,255,0.05); border-radius: 10px;">
+                        <div class="card-header text-center text-white fw-bold py-2" 
+                            style="background: rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.2); border-radius: 10px 10px 0 0;">
+                            <i class="bi bi-journal-text me-2"></i> Documentos Gerais do SGI
+                        </div>
+                        <ul class="list-group list-group-flush" style="background: transparent;">
+                            <li class="list-group-item bg-transparent border-0 px-3 py-2">
+                                <a class="nav-link d-block {% if 'documentos' in request.path %}active{% endif %}" 
+                                href="{% url 'gestao_documental:documento-list' %}">
+                                    <i class="bi bi-folder"></i> Documentos
+                                </a>
+                            </li>
+                            <li class="list-group-item bg-transparent border-0 px-3 py-2">
+                                <a class="nav-link d-block {% if 'nao-conformidades' in request.path %}active{% endif %}" 
+                                href="{% url 'nao_conformidades:nao-conformidade-list' %}">
+                                    <i class="bi bi-exclamation-triangle"></i> Não Conformidades
+                                </a>
+                            </li>
+                            <li class="list-group-item bg-transparent border-0 px-3 py-2">
+                                <a class="nav-link d-block {% if 'analise-critica' in request.path %}active{% endif %}" 
+                                href="{% url 'analise_critica:analise-critica-list' %}">
+                                    <i class="bi bi-graph-up"></i> Análise Crítica
+                                </a>
+                            </li>
+                            <li class="list-group-item bg-transparent border-0 px-3 py-2">
+                                <a class="nav-link d-block {% if 'auditorias' in request.path %}active{% endif %}" 
+                                href="{% url 'auditorias:auditoria-list' %}">
+                                    <i class="bi bi-clipboard-check"></i> Auditorias
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <!-- Gestão da Qualidade -->
+                <li class="nav-item mt-3 border-left-qualidade">
+                    <small class="text-uppercase text-qualidade px-3">
+                        <i class="bi bi-graph-up me-1"></i> Gestão da Qualidade
+                    </small>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'dashboard' %}">
                         <i class="bi bi-speedometer2"></i>
-                        Dashboard Geral
-                    </a>
-                </li>
-                
-                <!-- Gestão da Qualidade -->
-                <li class="nav-item mt-3">
-                    <small class="text-uppercase text-muted px-3">Gestão da Qualidade</small>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if 'documentos' in request.path %}active{% endif %}" href="{% url 'gestao_documental:documento-list' %}">
-                        <i class="bi bi-folder"></i>
-                        Documentos
-                        <span class="badge bg-primary module-badge">ISO 9001</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if 'nao-conformidades' in request.path %}active{% endif %}" href="{% url 'nao_conformidades:nao-conformidade-list' %}">
-                        <i class="bi bi-exclamation-triangle"></i>
-                        Não Conformidades
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if 'analise-critica' in request.path %}active{% endif %}" href="{% url 'analise_critica:analise-critica-list' %}">
-                        <i class="bi bi-graph-up"></i>
-                        Análise Crítica
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if 'auditorias' in request.path %}active{% endif %}" href="{% url 'auditorias:auditoria-list' %}">
-                        <i class="bi bi-clipboard-check"></i>
-                        Auditorias
+                        Dashboard Qualidade
                     </a>
                 </li>
 
-                <!-- Meio Ambiente -->
-                <li class="nav-item mt-3">
-                    <small class="text-uppercase text-muted px-3">Meio Ambiente</small>
-                </li>
                 <li class="nav-item">
                     <a class="nav-link {% if 'meio-ambiente' in request.path %}active{% endif %}" href="{% url 'meio_ambiente:dashboard' %}">
                         <i class="bi bi-globe2"></i>
@@ -227,8 +275,10 @@
                 </li>
 
                 <!-- Segurança do Trabalho -->
-                <li class="nav-item mt-3">
-                    <small class="text-uppercase text-muted px-3">Segurança</small>
+                <li class="nav-item mt-3 border-left-seguranca">
+                    <small class="text-uppercase text-seguranca px-3">
+                        <i class="bi bi-shield-check me-1"></i> Segurança
+                    </small>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if 'seguranca-trabalho' in request.path %}active{% endif %}" href="{% url 'seguranca:dashboard' %}">
@@ -239,8 +289,10 @@
                 </li>
 
                 <!-- Indicadores -->
-                <li class="nav-item mt-3">
-                    <small class="text-uppercase text-muted px-3">Métricas</small>
+                <li class="nav-item mt-3 border-left-metricas">
+                    <small class="text-uppercase text-metricas px-3">
+                        <i class="bi bi-bar-chart me-1"></i> Métricas
+                    </small>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if 'indicadores' in request.path %}active{% endif %}" href="{% url 'indicadores:indicador-list' %}">

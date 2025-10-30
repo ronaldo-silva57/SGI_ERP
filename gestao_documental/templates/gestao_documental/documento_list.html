@@ -18,7 +18,17 @@
 <div class="card mb-4">
     <div class="card-body">
         <form method="get" class="row g-3">
-            <div class="col-md-4">
+            <div class="col-md-3">
+                <label for="norma" class="form-label">Norma</label>
+                <select name="norma" id="norma" class="form-select">
+                    <option value="">Todas as Normas</option>
+                    <option value="iso9001" {% if request.GET.norma == 'iso9001' %}selected{% endif %}>ISO 9001 - Qualidade</option>
+                    <option value="iso14001" {% if request.GET.norma == 'iso14001' %}selected{% endif %}>ISO 14001 - Meio Ambiente</option>
+                    <option value="iso45001" {% if request.GET.norma == 'iso45001' %}selected{% endif %}>ISO 45001 - Saúde e Segurança</option>
+                    <option value="integrado" {% if request.GET.norma == 'integrado' %}selected{% endif %}>Integrado (SGI)</option>
+                </select>
+            </div>
+            <div class="col-md-3">
                 <label for="status" class="form-label">Status</label>
                 <select name="status" id="status" class="form-select">
                     <option value="">Todos os Status</option>
@@ -28,14 +38,18 @@
                     <option value="obsoleto" {% if request.GET.status == 'obsoleto' %}selected{% endif %}>Obsoleto</option>
                 </select>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="categoria" class="form-label">Categoria</label>
                 <select name="categoria" id="categoria" class="form-select">
                     <option value="">Todas as Categorias</option>
-                    <!-- Categorias serão preenchidas via contexto -->
+                    {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}" {% if request.GET.categoria == categoria.id|stringformat:"i" %}selected{% endif %}>
+                        {{ categoria.nome }}
+                    </option>
+                    {% endfor %}
                 </select>
             </div>
-            <div class="col-md-4 d-flex align-items-end">
+            <div class="col-md-3 d-flex align-items-end">
                 <button type="submit" class="btn btn-outline-primary me-2">
                     <i class="bi bi-funnel me-1"></i>Filtrar
                 </button>
@@ -60,6 +74,7 @@
                     <tr>
                         <th>Código</th>
                         <th>Título</th>
+                        <th>Norma</th>
                         <th>Categoria</th>
                         <th>Revisão</th>
                         <th>Status</th>
@@ -74,6 +89,17 @@
                             <strong>{{ documento.codigo }}</strong>
                         </td>
                         <td>{{ documento.titulo }}</td>
+                        <td>
+                            {% if documento.norma == 'iso9001' %}
+                                <span class="badge bg-primary">ISO 9001</span>
+                            {% elif documento.norma == 'iso14001' %}
+                                <span class="badge bg-success">ISO 14001</span>
+                            {% elif documento.norma == 'iso45001' %}
+                                <span class="badge bg-warning">ISO 45001</span>
+                            {% else %}
+                                <span class="badge bg-info">Integrado</span>
+                            {% endif %}
+                        </td>
                         <td>
                             <span class="badge bg-secondary">{{ documento.categoria.nome }}</span>
                         </td>

@@ -31,6 +31,20 @@
                     <div class="col-sm-9">{{ documento.titulo }}</div>
                 </div>
                 <div class="row mb-3">
+                    <div class="col-sm-3"><strong>Norma:</strong></div>
+                    <div class="col-sm-9">
+                        {% if documento.norma == 'iso9001' %}
+                            <span class="badge bg-primary">ISO 9001 - Qualidade</span>
+                        {% elif documento.norma == 'iso14001' %}
+                            <span class="badge bg-success">ISO 14001 - Meio Ambiente</span>
+                        {% elif documento.norma == 'iso45001' %}
+                            <span class="badge bg-warning">ISO 45001 - Saúde e Segurança</span>
+                        {% else %}
+                            <span class="badge bg-info">Integrado (SGI)</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
                     <div class="col-sm-3"><strong>Categoria:</strong></div>
                     <div class="col-sm-9">
                         <span class="badge bg-secondary">{{ documento.categoria.nome }}</span>
@@ -126,6 +140,7 @@
             <div class="card-body">
                 <small class="text-muted">
                     <div><strong>Criado em:</strong> {{ documento.data_elaboracao|date:"d/m/Y H:i" }}</div>
+                    <div><strong>Norma:</strong> {{ documento.get_norma_display }}</div>
                     {% if documento.arquivo %}
                     <div><strong>Arquivo:</strong> {{ documento.arquivo.name|slice:"12:" }}</div>
                     <div><strong>Tamanho:</strong> {{ documento.arquivo.size|filesizeformat }}</div>

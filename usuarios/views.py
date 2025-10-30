@@ -9,7 +9,7 @@ from .forms import UsuarioCustomizadoCreationForm, UsuarioCustomizadoChangeForm
 #class UsuarioListView(LoginRequiredMixin, ListView):
 class UsuarioListView(ListView):
     model = UsuarioCustomizado
-    template_name = 'usuarios/usuario_list.html'
+    template_name = 'usuarios/usuarios_list.html'
     context_object_name = 'usuarios'
     paginate_by = 15
     

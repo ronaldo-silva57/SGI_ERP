@@ -1,11 +1,46 @@
 {% extends 'base.html' %}
 {% block title %}Aspectos Ambientais{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2 text-success"><i class="bi bi-tree me-2"></i>Aspectos Ambientais</h1>
     <a href="{% url 'meio_ambiente:aspecto-create' %}" class="btn btn-primary">
         <i class="bi bi-plus-circle me-1"></i>Novo Aspecto
     </a>
+</div>
+
+<!-- Filtros -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label for="nivel_significancia" class="form-label">Nível de Significância</label>
+                <select name="nivel_significancia" id="nivel_significancia" class="form-select">
+                    <option value="">Todos os Níveis</option>
+                    <option value="baixo" {% if request.GET.nivel_significancia == 'baixo' %}selected{% endif %}>Baixo</option>
+                    <option value="medio" {% if request.GET.nivel_significancia == 'medio' %}selected{% endif %}>Médio</option>
+                    <option value="alto" {% if request.GET.nivel_significancia == 'alto' %}selected{% endif %}>Alto</option>
+                    <option value="critico" {% if request.GET.nivel_significancia == 'critico' %}selected{% endif %}>Crítico</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="status" class="form-label">Status</label>
+                <select name="status" id="status" class="form-select">
+                    <option value="">Todos os Status</option>
+                    <option value="ativo" {% if request.GET.status == 'ativo' %}selected{% endif %}>Ativo</option>
+                    <option value="controlado" {% if request.GET.status == 'controlado' %}selected{% endif %}>Controlado</option>
+                    <option value="eliminado" {% if request.GET.status == 'eliminado' %}selected{% endif %}>Eliminado</option>
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-funnel me-1"></i>Filtrar
+                </button>
+                <a href="{% url 'meio_ambiente:aspecto-list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Limpar
+                </a>
+            </div>
+        </form>
+    </div>
 </div>
 
 <div class="card">
@@ -20,6 +55,7 @@
                         <th>Impacto</th>
                         <th>Nível</th>
                         <th>Status</th>
+                        <th>Data Avaliação</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -29,15 +65,36 @@
                         <td>{{ aspecto.processo }}</td>
                         <td>{{ aspecto.aspecto }}</td>
                         <td>{{ aspecto.impacto }}</td>
-                        <td>{{ aspecto.get_nivel_significancia_display }}</td>
-                        <td>{{ aspecto.get_status_display }}</td>
                         <td>
-                            <a href="{% url 'meio_ambiente:aspecto-detail' aspecto.pk %}" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                            <a href="{% url 'meio_ambiente:aspecto-update' aspecto.pk %}" class="btn btn-sm btn-outline-secondary">
-                                <i class="bi bi-pencil"></i>
-                            </a>
+                            {% if aspecto.nivel_significancia == 'critico' %}
+                                <span class="badge bg-danger">{{ aspecto.get_nivel_significancia_display }}</span>
+                            {% elif aspecto.nivel_significancia == 'alto' %}
+                                <span class="badge bg-warning">{{ aspecto.get_nivel_significancia_display }}</span>
+                            {% elif aspecto.nivel_significancia == 'medio' %}
+                                <span class="badge bg-info">{{ aspecto.get_nivel_significancia_display }}</span>
+                            {% else %}
+                                <span class="badge bg-success">{{ aspecto.get_nivel_significancia_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if aspecto.status == 'ativo' %}
+                                <span class="badge bg-warning">{{ aspecto.get_status_display }}</span>
+                            {% elif aspecto.status == 'controlado' %}
+                                <span class="badge bg-info">{{ aspecto.get_status_display }}</span>
+                            {% else %}
+                                <span class="badge bg-success">{{ aspecto.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ aspecto.data_avaliacao|date:"d/m/Y" }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'meio_ambiente:aspecto-detail' aspecto.pk %}" class="btn btn-outline-primary">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'meio_ambiente:aspecto-update' aspecto.pk %}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -45,7 +102,14 @@
             </table>
         </div>
         {% else %}
-        <p class="text-muted">Nenhum aspecto ambiental cadastrado.</p>
+        <div class="text-center py-4">
+            <i class="bi bi-tree display-4 text-muted"></i>
+            <h4 class="text-muted mt-3">Nenhum aspecto ambiental encontrado</h4>
+            <p class="text-muted">Tente ajustar os filtros ou criar um novo aspecto.</p>
+            <a href="{% url 'meio_ambiente:aspecto-create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>Criar Primeiro Aspecto
+            </a>
+        </div>
         {% endif %}
     </div>
 </div>

@@ -5,6 +5,9 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import AspectoImpactoAmbiental, LicencaAmbiental, EmergenciaAmbiental
 from .forms import AspectoImpactoAmbientalForm, LicencaAmbientalForm, EmergenciaAmbientalForm
+from django.utils import timezone
+from datetime import timedelta
+
 
 # AspectoImpactoAmbiental Views
 #class AspectoImpactoListView(LoginRequiredMixin, ListView):
@@ -135,3 +138,74 @@ def meio_ambiente_dashboard(request):
         'emergencias_count': emergencias_count,
     }
     return render(request, 'meio_ambiente/dashboard.html', context)
+
+def aspecto_list(request):
+    aspectos = AspectoImpactoAmbiental.objects.all()
+    
+    # Filtros
+    nivel_significancia = request.GET.get('nivel_significancia')
+    status = request.GET.get('status')
+    
+    if nivel_significancia:
+        aspectos = aspectos.filter(nivel_significancia=nivel_significancia)
+    if status:
+        aspectos = aspectos.filter(status=status)
+    
+    context = {
+        'aspectos': aspectos,
+        'today': timezone.now().date(),
+        'proximo_mes': timezone.now().date() + timedelta(days=30)
+    }
+    return render(request, 'meio_ambiente/aspecto_list.html', context)
+
+def licenca_list(request):
+    licencas = LicencaAmbiental.objects.all()
+    
+    # Filtros
+    numero = request.GET.get('numero')
+    orgao_emissor = request.GET.get('orgao_emissor')
+    validade = request.GET.get('validade')
+    
+    if numero:
+        licencas = licencas.filter(numero__icontains=numero)
+    if orgao_emissor:
+        licencas = licencas.filter(orgao_emissor__icontains=orgao_emissor)
+    if validade == 'vencidas':
+        licencas = licencas.filter(validade__lt=timezone.now().date())
+    elif validade == 'vigentes':
+        licencas = licencas.filter(validade__gte=timezone.now().date())
+    elif validade == 'proximo_vencimento':
+        proximo_mes = timezone.now().date() + timedelta(days=30)
+        licencas = licencas.filter(
+            validade__gte=timezone.now().date(),
+            validade__lte=proximo_mes
+        )
+    
+    context = {
+        'licencas': licencas,
+        'today': timezone.now().date(),
+        'proximo_mes': timezone.now().date() + timedelta(days=30)
+    }
+    return render(request, 'meio_ambiente/licenca_list.html', context)
+
+def emergencia_list(request):
+    emergencias = EmergenciaAmbiental.objects.all()
+
+    tipo_evento = request.GET.get('tipo_evento')
+    local = request.GET.get('local')
+    data = request.GET.get('data')
+
+    if tipo_evento:
+        emergencias = emergencias.filter(tipo_evento__icontains=tipo_evento)
+    if local:
+        emergencias = emergencias.filter(local__icontains=local)
+    if data:
+        emergencias = emergencias.filter(data=data)
+
+    context = {
+        'emergencias': emergencias,
+    }
+    return render(request, 'meio_ambiente/emergencia_list.html', context)
+
+
+

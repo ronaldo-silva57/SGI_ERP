@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Dashboard - SGI{% endblock %}
+{% block title %}Dashboard - Qualidade{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Dashboard</h1>
+    <h1 class="h2"><i class="bi bi-award me-2"></i>Qualidade</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group me-2">
             <span class="btn btn-sm btn-outline-secondary">
@@ -27,7 +27,7 @@
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                             Documentos
                         </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_documentos }}</div>
                         <div class="text-xs text-muted">Total de documentos</div>
                     </div>
                     <div class="col-auto">
@@ -53,7 +53,7 @@
                         <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                             NCs Abertas
                         </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ ncs_abertas }}</div>
                         <div class="text-xs text-muted">Não conformidades</div>
                     </div>
                     <div class="col-auto">
@@ -79,7 +79,7 @@
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                             Análises Realizadas
                         </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ analises_realizadas }}</div>
                         <div class="text-xs text-muted">Este ano</div>
                     </div>
                     <div class="col-auto">
@@ -105,7 +105,7 @@
                         <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                             Auditorias
                         </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ auditorias_programadas }}</div>
                         <div class="text-xs text-muted">Programadas</div>
                     </div>
                     <div class="col-auto">
@@ -129,7 +129,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-lightning me-2"></i>Ações Rápidas
+                    <i class="bi bi-lightning me-2"></i>Ações Rápidas - Qualidade
                 </h5>
             </div>
             <div class="card-body">
@@ -160,7 +160,7 @@
     </div>
 </div>
 
-<!-- Últimas Atividades -->
+<!-- Últimas Atividades e Informações -->
 <div class="row mt-4">
     <div class="col-lg-6">
         <div class="card">
@@ -182,17 +182,17 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-info-circle me-2"></i>Sistema de Gestão da Integrada
+                    <i class="bi bi-info-circle me-2"></i>Gestão da Qualidade
                 </h5>
             </div>
             <div class="card-body">
-                <h6>Bem-vindo ao SGI-ERP</h6>
+                <h6>Bem-vindo ao Módulo de Qualidade</h6>
                 <p class="small text-muted">
                     Sistema desenvolvido para atender aos requisitos do SGI, 
-                    integrando todos os processos do Sistema de Gestão Integrada.
+                    integrando todos os processos do Sistema de Gestão da Qualidade.
                 </p>
                 <div class="mt-3">
-                    <span class="badge bg-primary me-1">ISO 9001:2015 14001:2015 e 45001:2018</span>
+                    <span class="badge bg-primary me-1">ISO 9001:2015</span>
                     <span class="badge bg-success me-1">Gestão Documental</span>
                     <span class="badge bg-warning me-1">Não Conformidades</span>
                     <span class="badge bg-info">Análise Crítica</span>
