@@ -54,6 +54,48 @@
             font-size: 0.8rem;
         }
 
+        /* Barra de rolagem para o sidebar em telas pequenas */
+        @media (max-height: 600px) {
+            .sidebar {
+                overflow-y: auto;
+            }
+            
+            .position-sticky {
+                position: relative !important;
+            }
+        }
+
+        /* Barra de rolagem personalizada para o sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Para Firefox */
+        .sidebar {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
+        }
+
+        /* Limitar altura máxima do conteúdo do sidebar */
+        .sidebar-content {
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+}
+
         .nav-link {
             color: #ecf0f1;
             padding: 0.8rem 1rem;
@@ -258,7 +300,7 @@
             <div class="subtitle">Sistema de Gestão Integrada</div>
         </div>
         
-        <div class="position-sticky pt-3">
+        <div class="position-sticky pt-3 sidebar-content">
             <ul class="nav flex-column">
                 
 
