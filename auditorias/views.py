@@ -113,7 +113,7 @@ class HistoricoAuditoriaView(LoginRequiredMixin, DetailView):
         context['historico'] = self.object.history.all().order_by('-history_date')
         return context
 
-class HistoricoProgramaView(LoginRequiredMixin, DetailView):
+class HistoricoProgramaView(DetailView):
     model = ProgramaAuditoria
     template_name = 'auditorias/historico_programa.html'
     context_object_name = 'programa'
