@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import AnaliseCritica
 from .forms import AnaliseCriticaForm
+from simple_history.models import HistoricalRecords 
 
 #class AnaliseCriticaListView(LoginRequiredMixin, ListView):
 class AnaliseCriticaListView(ListView):

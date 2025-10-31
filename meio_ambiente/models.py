@@ -1,5 +1,6 @@
 from django.db import models
 from usuarios.models import UsuarioCustomizado
+from simple_history.models import HistoricalRecords
 
 class AspectoImpactoAmbiental(models.Model):
     NIVEL_SIGNIFICANCIA = [
@@ -25,6 +26,12 @@ class AspectoImpactoAmbiental(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ativo')
     data_avaliacao = models.DateField(auto_now_add=True)
 
+    history = HistoricalRecords(
+        table_name='impacto_ambiental_history',
+        custom_model_name=lambda x: f'Historical{x}',
+        related_name='+'
+    )
+
     class Meta:
         verbose_name = "Aspecto e Impacto Ambiental"
         verbose_name_plural = "Aspectos e Impactos Ambientais"
@@ -47,7 +54,11 @@ class LicencaAmbiental(models.Model):
 
     def __str__(self):
         return f"Licença {self.numero} - {self.orgao_emissor}"
-
+    history = HistoricalRecords(
+        table_name='licenca_ambiental_history',
+        custom_model_name=lambda x: f'Historical{x}',
+        related_name='+'
+    )
 
 class EmergenciaAmbiental(models.Model):
     tipo_evento = models.CharField(max_length=200, help_text="Ex: Vazamento de óleo, incêndio")
@@ -56,6 +67,11 @@ class EmergenciaAmbiental(models.Model):
     medidas_adotadas = models.TextField()
     responsavel = models.ForeignKey(UsuarioCustomizado, on_delete=models.PROTECT)
     evidencias = models.FileField(upload_to='emergencias_ambientais/', blank=True, null=True)
+    history = HistoricalRecords(
+        table_name='emergencia_ambiental_history',
+        custom_model_name=lambda x: f'Historical{x}',
+        related_name='+'
+    )
 
     class Meta:
         verbose_name = "Emergência Ambiental"

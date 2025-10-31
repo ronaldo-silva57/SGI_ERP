@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Programas de Auditoria - Zenith QMS{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="bi bi-calendar-check me-2"></i>Programas de Auditoria
+    </h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{% url 'auditorias:programa-create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>Novo Programa
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Programas Cadastrados</h5>
+    </div>
+    <div class="card-body">
+        {% if programas %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Ano</th>
+                        <th>Objetivo</th>
+                        <th>Escopo</th>
+                        <th>Critérios</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for programa in programas %}
+                    <tr>
+                        <td><strong>{{ programa.ano }}</strong></td>
+                        <td>{{ programa.objetivo|truncatewords:10 }}</td>
+                        <td>{{ programa.escopo|truncatewords:10 }}</td>
+                        <td>{{ programa.criterios|truncatewords:10 }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'auditorias:programa-detail' programa.pk %}" class="btn btn-outline-primary">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'auditorias:programa-update' programa.pk %}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{% url 'auditorias:programa-delete' programa.pk %}" class="btn btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-calendar-check display-1 text-muted"></i>
+            <h4 class="text-muted mt-3">Nenhum programa encontrado</h4>
+            <p class="text-muted">Comece criando o primeiro programa de auditoria.</p>
+            <a href="{% url 'auditorias:programa-create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>Criar Primeiro Programa
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

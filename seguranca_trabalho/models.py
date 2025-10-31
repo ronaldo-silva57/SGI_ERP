@@ -1,5 +1,6 @@
 from django.db import models
 from usuarios.models import UsuarioCustomizado
+from simple_history.models import HistoricalRecords
 
 class PerigoRisco(models.Model):
     NIVEL_RISCO_CHOICES = [
@@ -23,7 +24,11 @@ class PerigoRisco(models.Model):
     responsavel = models.ForeignKey(UsuarioCustomizado, on_delete=models.PROTECT)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='identificado')
     data_identificacao = models.DateField(auto_now_add=True)
-
+    history = HistoricalRecords(
+        table_name='Perigo_risco_history',
+        custom_model_name=lambda x: f'Historical{x}',
+        related_name='+'
+    )
     class Meta:
         verbose_name = "Perigo e Risco"
         verbose_name_plural = "Perigos e Riscos"
@@ -48,6 +53,11 @@ class Acidente(models.Model):
     causa_raiz = models.TextField(blank=True)
     medidas_corretivas = models.TextField(blank=True)
     evidencias = models.FileField(upload_to='acidentes/', blank=True, null=True)
+    history = HistoricalRecords(
+        table_name='acidente_history',
+        custom_model_name=lambda x: f'Historical{x}',
+        related_name='+'
+    )
 
     class Meta:
         verbose_name = "Acidente / Incidente"
@@ -65,6 +75,11 @@ class TreinamentoSST(models.Model):
     participantes = models.ManyToManyField(UsuarioCustomizado, related_name='treinamentos_sst')
     instrutor = models.ForeignKey(UsuarioCustomizado, on_delete=models.PROTECT, related_name='treinamentos_ministrados')
     certificado = models.FileField(upload_to='certificados_sst/', blank=True, null=True)
+    history = HistoricalRecords(
+        table_name='treinamento_history',
+        custom_model_name=lambda x: f'Historical{x}',
+        related_name='+'
+    )
 
     class Meta:
         verbose_name = "Treinamento SST"

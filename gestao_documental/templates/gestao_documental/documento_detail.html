@@ -139,7 +139,7 @@
             </div>
             <div class="card-body">
                 <small class="text-muted">
-                    <div><strong>Criado em:</strong> {{ documento.data_elaboracao|date:"d/m/Y H:i" }}</div>
+                    <div><strong>Criado em:</strong> {{ documento.data_elaboracao|date:"d/m/Y" }}</div>
                     <div><strong>Norma:</strong> {{ documento.get_norma_display }}</div>
                     {% if documento.arquivo %}
                     <div><strong>Arquivo:</strong> {{ documento.arquivo.name|slice:"12:" }}</div>

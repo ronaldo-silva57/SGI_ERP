@@ -1,8 +1,9 @@
 from django.contrib import admin
 from .models import AnaliseCritica
+from simple_history.admin import SimpleHistoryAdmin
 
 @admin.register(AnaliseCritica)
-class AnaliseCriticaAdmin(admin.ModelAdmin):
+class AnaliseCriticaAdmin(SimpleHistoryAdmin):
     list_display = ['periodo', 'norma', 'data_reuniao', 'coordenador', 'status', 'data_proxima_reuniao']
     list_filter = ['norma', 'status', 'data_reuniao', 'coordenador']
     search_fields = ['periodo', 'decisoes_tomadas', 'acoes_melhoria', 'temas_ambientais', 'temas_sst']

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Excluir Programa - Zenith QMS{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-exclamation-triangle text-danger me-2"></i>
+                    Confirmar Exclusão
+                </h5>
+            </div>
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <i class="bi bi-calendar-x display-1 text-danger"></i>
+                </div>
+                
+                <h4>Tem certeza que deseja excluir?</h4>
+                <p class="text-muted">
+                    Você está prestes a excluir o Programa de Auditoria <strong>{{ object.ano }}</strong>.
+                    Esta ação não pode ser desfeita.
+                </p>
+
+                {% if object.auditoria_set.all %}
+                <div class="alert alert-warning">
+                    <i class="bi bi-warning me-2"></i>
+                    <strong>Atenção!</strong> Este programa possui {{ object.auditoria_set.count }} auditoria(s) vinculada(s). 
+                    A exclusão do programa pode afetar essas auditorias.
+                </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                        <a href="{% url 'auditorias:programa-detail' object.pk %}" class="btn btn-outline-secondary me-md-2">
+                            <i class="bi bi-arrow-left me-1"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>Sim, Excluir
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,5 +1,6 @@
 from django.db import models
 from usuarios.models import UsuarioCustomizado
+from simple_history.models import HistoricalRecords
 
 class AnaliseCritica(models.Model):
     NORMA_CHOICES = [
@@ -62,7 +63,11 @@ class AnaliseCritica(models.Model):
 
     data_criacao = models.DateTimeField(auto_now_add=True)
     data_atualizacao = models.DateTimeField(auto_now=True)
-
+    history = HistoricalRecords(
+        table_name='analise_critica_history',
+        custom_model_name=lambda x: f'Historical{x}',
+        related_name='+'
+    )
     class Meta:
         verbose_name = "Análise Crítica"
         verbose_name_plural = "Análises Críticas"

@@ -1,8 +1,9 @@
 from django.contrib import admin
 from .models import NaoConformidade
+from simple_history.admin import SimpleHistoryAdmin
 
 @admin.register(NaoConformidade)
-class NaoConformidadeAdmin(admin.ModelAdmin):
+class NaoConformidadeAdmin(SimpleHistoryAdmin):
     list_display = ['numero', 'titulo', 'setor_envolvido', 'data_deteccao', 'gravidade', 'status']
     list_filter = ['status', 'gravidade', 'setor_envolvido', 'data_deteccao']
     search_fields = ['numero', 'titulo', 'descricao']

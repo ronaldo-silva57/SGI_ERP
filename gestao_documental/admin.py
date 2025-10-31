@@ -1,8 +1,9 @@
 from django.contrib import admin
 from .models import CategoriaDocumento, Documento
+from simple_history.admin import SimpleHistoryAdmin
 
 @admin.register(CategoriaDocumento)
-class CategoriaDocumentoAdmin(admin.ModelAdmin):
+class CategoriaDocumentoAdmin(SimpleHistoryAdmin):
     list_display = ['codigo', 'nome', 'descricao_curta', 'total_documentos']
     search_fields = ['nome', 'codigo', 'descricao']
     list_filter = ['codigo']
@@ -17,7 +18,7 @@ class CategoriaDocumentoAdmin(admin.ModelAdmin):
     total_documentos.short_description = 'Total Documentos'
 
 @admin.register(Documento)
-class DocumentoAdmin(admin.ModelAdmin):
+class DocumentoAdmin(SimpleHistoryAdmin):
     list_display = ['codigo', 'tipo_documento', 'norma', 'titulo_curto', 'categoria', 'revisao', 'status', 'data_elaboracao']
     list_filter = ['norma', 'status', 'categoria', 'tipo_documento', 'data_elaboracao']
     search_fields = ['codigo', 'titulo', 'elaborador__username', 'categoria__nome']

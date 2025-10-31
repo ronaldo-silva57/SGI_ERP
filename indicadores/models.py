@@ -1,4 +1,5 @@
 from django.db import models
+from simple_history.models import HistoricalRecords
 
 class Indicador(models.Model):
     NORMA_CHOICES = [
@@ -30,6 +31,11 @@ class Indicador(models.Model):
     unidade_medida = models.CharField(max_length=50)
     frequencia_medicao = models.CharField(max_length=50) #Mensal, trimestral, etc.
     responsavel = models.CharField(max_length=100)
+    history = HistoricalRecords(
+        table_name='indicadores_history',
+        custom_model_name=lambda x: f'Historical{x}',
+        related_name='+'
+    )
 
     def __str__(self):
         return f"{self.nome} ({self.unidade_medida})"

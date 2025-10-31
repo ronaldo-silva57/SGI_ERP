@@ -1,8 +1,9 @@
 from django.contrib import admin
 from .models import PerigoRisco, Acidente, TreinamentoSST
+from simple_history.admin import SimpleHistoryAdmin
 
 @admin.register(PerigoRisco)
-class PerigoRiscoAdmin(admin.ModelAdmin):
+class PerigoRiscoAdmin(SimpleHistoryAdmin):
     list_display = ['atividade', 'perigo', 'risco', 'nivel_risco', 'responsavel', 'status', 'data_identificacao']
     list_filter = ['nivel_risco', 'status', 'data_identificacao', 'responsavel']
     search_fields = ['atividade', 'perigo', 'risco', 'medidas_controle']
@@ -23,7 +24,7 @@ class PerigoRiscoAdmin(admin.ModelAdmin):
     )
 
 @admin.register(Acidente)
-class AcidenteAdmin(admin.ModelAdmin):
+class AcidenteAdmin(SimpleHistoryAdmin):
     list_display = ['tipo', 'data', 'local', 'vitima', 'causa_raiz_breve']
     list_filter = ['tipo', 'data']
     search_fields = ['local', 'descricao', 'causa_raiz']
@@ -35,7 +36,7 @@ class AcidenteAdmin(admin.ModelAdmin):
     causa_raiz_breve.short_description = 'Causa Raiz'
 
 @admin.register(TreinamentoSST)
-class TreinamentoSSTAdmin(admin.ModelAdmin):
+class TreinamentoSSTAdmin(SimpleHistoryAdmin):
     list_display = ['nome', 'data', 'instrutor', 'participantes_count']
     list_filter = ['data', 'instrutor']
     search_fields = ['nome', 'descricao']

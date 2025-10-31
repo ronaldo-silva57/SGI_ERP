@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}Ajuda SGI - Referências ISO{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <h3 class="mb-4">
+        <i class="bi bi-question-circle text-info"></i> Referências das Normas ISO
+    </h3>
+    <p class="text-muted mb-4">
+        Consulte os principais requisitos das normas ISO 9001:2015, ISO 14001:2015 e ISO 45001:2018.
+    </p>
+
+    <!-- Abas -->
+    <ul class="nav nav-tabs" id="isoTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active text-qualidade" id="iso9001-tab" data-bs-toggle="tab" data-bs-target="#iso9001" type="button" role="tab">
+                <i class="bi bi-gear"></i> ISO 9001:2015
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-meio-ambiente" id="iso14001-tab" data-bs-toggle="tab" data-bs-target="#iso14001" type="button" role="tab">
+                <i class="bi bi-tree"></i> ISO 14001:2015
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-seguranca" id="iso45001-tab" data-bs-toggle="tab" data-bs-target="#iso45001" type="button" role="tab">
+                <i class="bi bi-shield-check"></i> ISO 45001:2018
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content pt-4" id="isoTabsContent">
+
+        <!-- ===================== ISO 9001 ====================== -->
+        <div class="tab-pane fade show active" id="iso9001" role="tabpanel">
+            <div class="card border-left-qualidade p-3">
+                <h5 class="text-qualidade"><i class="bi bi-gear-fill"></i> ISO 9001:2015 - Sistema de Gestão da Qualidade</h5>
+                <p class="text-muted">Baseada no ciclo PDCA e na abordagem por processos, visa garantir a satisfação do cliente e a melhoria contínua.</p>
+                <ul>
+                    <li><strong>4.</strong> Contexto da organização</li>
+                    <li><strong>5.</strong> Liderança e comprometimento</li>
+                    <li><strong>6.</strong> Planejamento e riscos</li>
+                    <li><strong>7.</strong> Apoio (recursos, competências, comunicação, informação documentada)</li>
+                    <li><strong>8.</strong> Operação (planejamento e controle operacional, produtos e serviços)</li>
+                    <li><strong>9.</strong> Avaliação de desempenho (monitoramento, medição, auditorias e análise crítica)</li>
+                    <li><strong>10.</strong> Melhoria (não conformidades, ações corretivas e melhoria contínua)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ===================== ISO 14001 ====================== -->
+        <div class="tab-pane fade" id="iso14001" role="tabpanel">
+            <div class="card border-left-meio-ambiente p-3">
+                <h5 class="text-meio-ambiente"><i class="bi bi-tree-fill"></i> ISO 14001:2015 - Sistema de Gestão Ambiental</h5>
+                <p class="text-muted">Foca na gestão de aspectos e impactos ambientais, garantindo conformidade legal e sustentabilidade.</p>
+                <ul>
+                    <li><strong>4.</strong> Contexto e partes interessadas</li>
+                    <li><strong>5.</strong> Liderança e política ambiental</li>
+                    <li><strong>6.</strong> Planejamento (aspectos ambientais, riscos e oportunidades)</li>
+                    <li><strong>7.</strong> Apoio (competência, conscientização e controle documental)</li>
+                    <li><strong>8.</strong> Operações (controles e emergências ambientais)</li>
+                    <li><strong>9.</strong> Avaliação de desempenho (monitoramento, auditorias e conformidade legal)</li>
+                    <li><strong>10.</strong> Melhoria contínua do desempenho ambiental</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ===================== ISO 45001 ====================== -->
+        <div class="tab-pane fade" id="iso45001" role="tabpanel">
+            <div class="card border-left-seguranca p-3">
+                <h5 class="text-seguranca"><i class="bi bi-shield-fill-check"></i> ISO 45001:2018 - Saúde e Segurança Ocupacional</h5>
+                <p class="text-muted">Tem como objetivo eliminar perigos, reduzir riscos e criar ambientes de trabalho seguros e saudáveis.</p>
+                <ul>
+                    <li><strong>4.</strong> Contexto da organização e partes interessadas</li>
+                    <li><strong>5.</strong> Liderança e participação dos trabalhadores</li>
+                    <li><strong>6.</strong> Planejamento (riscos, oportunidades e objetivos de SST)</li>
+                    <li><strong>7.</strong> Apoio (recursos, comunicação e competências)</li>
+                    <li><strong>8.</strong> Operação (planejamento e controle operacional, emergências)</li>
+                    <li><strong>9.</strong> Avaliação de desempenho e auditorias</li>
+                    <li><strong>10.</strong> Melhoria e prevenção de incidentes</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -77,6 +77,7 @@ urlpatterns = [
     path('analise-critica/', include('analise_critica.urls')),
     path('meio-ambiente/', include('meio_ambiente.urls')),
     path('seguranca-trabalho/', include('seguranca_trabalho.urls')),
+    path('help-sgi/', include('help_sgi.urls')),
 ]
 
 if settings.DEBUG:

@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth import get_user_model # para history
+from simple_history.models import HistoricalRecords # para history
 from usuarios.models import UsuarioCustomizado
 
 class ProgramaAuditoria(models.Model):
@@ -6,6 +8,13 @@ class ProgramaAuditoria(models.Model):
     objetivo = models.TextField()
     escopo = models.TextField()
     criterios = models.TextField()
+
+    # Histórico Automático
+    history = HistoricalRecords(
+        table_name='progrma_auditoria_history',
+        custom_model_name=lambda x: f'Historical{x}',
+        related_name='+'
+    )
 
     def __str__(self):
         return f"Programa de Auditoria {self.ano}"
@@ -43,6 +52,13 @@ class Auditoria(models.Model):
     lider = models.ForeignKey(UsuarioCustomizado, on_delete=models.PROTECT, related_name='auditorias_lideradas')
     status = models.CharField(max_length=20, choices=STATUS_CHOICE, default='planejada')
     relatorio = models.FileField(upload_to='relatorios_auditoria/', blank=True)
+
+        # Histórico automático
+    history = HistoricalRecords(
+        table_name='auditoria_history',
+        custom_model_name=lambda x: f'Historical{x}',
+        related_name='+'
+    )
 
     class Meta:
         verbose_name = "Auditoria"

@@ -1,5 +1,6 @@
 from django.db import models
 from usuarios.models import UsuarioCustomizado
+from simple_history.models import HistoricalRecords
 
 class CategoriaDocumento(models.Model):
     nome = models.CharField(max_length=100)
@@ -51,7 +52,12 @@ class Documento(models.Model):
     versao_anterior = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)
     elaborador = models.ForeignKey(UsuarioCustomizado, on_delete=models.PROTECT, related_name='documentos_elaborados')
     aprovador = models.ForeignKey(UsuarioCustomizado, on_delete=models.PROTECT, related_name='documentos_aprovados', null=True, blank=True)
-    
+    history = HistoricalRecords(
+        table_name='gestao_documental_history',
+        custom_model_name=lambda x: f'Historical{x}',
+        related_name='+'
+    )
+
     class Meta:
         verbose_name = "Documento"
         verbose_name_plural = "Documentos"

@@ -54,3 +54,70 @@ class AuditoriaUpdateView(UpdateView):
     def form_valid(self, form):
         messages.success(self.request, 'Auditoria atualizada com sucesso!')
         return super().form_valid(form)
+    
+#======== Programa Auditoria =============
+class ProgramaAuditoriaListView(ListView):
+    model = ProgramaAuditoria
+    template_name = 'auditorias/programa_list.html'
+    context_object_name = 'programas'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return ProgramaAuditoria.objects.all().order_by('-ano')
+    
+class ProgramaAuditoriaDetailView(DetailView):
+    model = ProgramaAuditoria
+    template_name = 'auditorias/programa_detail.html'
+    context_object_name = 'programa'
+
+class ProgramaAuditoriaCreateView(CreateView):
+    model = ProgramaAuditoria
+    form_class = ProgramaAuditoriaForm
+    template_name = 'auditorias/programa_form.html'
+    success_url = reverse_lazy( 'auditorias:programa-list')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Programa de Auditoria criado com sucesso!')
+        return super().form_valid(form)
+    
+class ProgramaAuditoriaUpdateView(UpdateView):
+    model = ProgramaAuditoria
+    form_class = ProgramaAuditoriaForm
+    template_name = 'auditorias/programa_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('auditorias:programa-detail', kwargs={'pk': self.object.pk})
+    
+    def form_valid(self, form):
+        messages.success(self.request, 'Programa de Auditoria atualizado com sucesso!')
+        return super().form_valid(form)
+    
+class ProgramaAuditoriaDeleteView(DetailView):
+    model = ProgramaAuditoria
+    template_name = 'auditoria/programa_confirm_delete.html'
+    success_url = reverse_lazy('auditoria:programa-list')
+
+    def delete(self, request,*args, **kwargs):
+        messages.success(self.request, 'Programa de Auditoria excluído com sucesso!')
+        return super().delete(request, *args, **kwargs)
+    
+# ======= Views para Histórico =======
+class HistoricoAuditoriaView(LoginRequiredMixin, DetailView):
+    model = Auditoria
+    template_name = 'auditorias/historico_auditoria.html'
+    context_object_name = 'auditoria'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Obtém todo o histórico ordenado por data (mais recente primeiro)
+        context['historico'] = self.object.history.all().order_by('-history_date')
+        return context
+
+class HistoricoProgramaView(LoginRequiredMixin, DetailView):
+    model = ProgramaAuditoria
+    template_name = 'auditorias/historico_programa.html'
+    context_object_name = 'programa'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['historico']

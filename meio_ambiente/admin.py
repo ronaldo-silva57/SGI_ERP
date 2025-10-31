@@ -1,8 +1,9 @@
 from django.contrib import admin
 from .models import AspectoImpactoAmbiental, LicencaAmbiental, EmergenciaAmbiental
+from simple_history.admin import SimpleHistoryAdmin
 
 @admin.register(AspectoImpactoAmbiental)
-class AspectoImpactoAmbientalAdmin(admin.ModelAdmin):
+class AspectoImpactoAmbientalAdmin(SimpleHistoryAdmin):
     list_display = ['processo', 'aspecto', 'impacto', 'nivel_significancia', 'responsavel', 'status', 'data_avaliacao']
     list_filter = ['nivel_significancia', 'status', 'data_avaliacao', 'responsavel']
     search_fields = ['processo', 'aspecto', 'impacto', 'medidas_controle']
@@ -23,7 +24,7 @@ class AspectoImpactoAmbientalAdmin(admin.ModelAdmin):
     )
 
 @admin.register(LicencaAmbiental)
-class LicencaAmbientalAdmin(admin.ModelAdmin):
+class LicencaAmbientalAdmin(SimpleHistoryAdmin):
     list_display = ['numero', 'orgao_emissor', 'validade', 'esta_valida']
     list_filter = ['orgao_emissor', 'validade']
     search_fields = ['numero', 'orgao_emissor', 'observacoes']
@@ -36,7 +37,7 @@ class LicencaAmbientalAdmin(admin.ModelAdmin):
     esta_valida.short_description = 'Válida'
 
 @admin.register(EmergenciaAmbiental)
-class EmergenciaAmbientalAdmin(admin.ModelAdmin):
+class EmergenciaAmbientalAdmin(SimpleHistoryAdmin):
     list_display = ['tipo_evento', 'local', 'data', 'responsavel']
     list_filter = ['tipo_evento', 'data']
     search_fields = ['tipo_evento', 'local', 'medidas_adotadas']

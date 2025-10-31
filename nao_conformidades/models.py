@@ -1,5 +1,6 @@
 from django.db import models
 from usuarios.models import UsuarioCustomizado
+from simple_history.models import HistoricalRecords
 
 class NaoConformidade(models.Model):
     NORMA_CHOICES = [
@@ -49,7 +50,11 @@ class NaoConformidade(models.Model):
     eficaz = models.BooleanField(blank=True, null=True)
     evidencias = models.FileField(upload_to='evidencias_nc/', blank=True, null=True)
     status = models.CharField(max_length=50, blank=True, null=True)
-
+    history = HistoricalRecords(
+        table_name='nao_conformidade_history',
+        custom_model_name=lambda x: f'Historical{x}',
+        related_name='+'
+    )
 
     class Meta:
         verbose_name = "Não Conformidade"
