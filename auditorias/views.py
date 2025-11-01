@@ -7,7 +7,7 @@ from .models import Auditoria, ProgramaAuditoria
 from .forms import AuditoriaForm, ProgramaAuditoriaForm
 
 #class AuditoriaListView(ListView):
-class AuditoriaListView(LoginRequiredMixin, ListView):
+class AuditoriaListView(ListView):
     model = Auditoria
     template_name = 'auditorias/auditoria_list.html'
     context_object_name = 'auditorias'
@@ -102,7 +102,7 @@ class ProgramaAuditoriaDeleteView(DetailView):
         return super().delete(request, *args, **kwargs)
     
 # ======= Views para Histórico =======
-class HistoricoAuditoriaView(LoginRequiredMixin, DetailView):
+class HistoricoAuditoriaView(DetailView):
     model = Auditoria
     template_name = 'auditorias/historico_auditoria.html'
     context_object_name = 'auditoria'
