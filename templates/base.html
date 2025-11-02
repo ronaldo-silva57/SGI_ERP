@@ -348,7 +348,7 @@
                     </small>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'dashboard' %}">
+                        <a class="nav-link {% if request.path == '/dashboard/' %}active{% endif %}" href="{% url 'dashboard' %}">
                         <i class="bi bi-speedometer2"></i>
                         Dashboard Qualidade
                         <span class="badge bg-danger module-badge">ISO 9001</span>
@@ -418,11 +418,11 @@
                             <strong class="text-white d-block">{{ user.get_full_name|default:user.username }}</strong>
                             <small class="text-muted">{{ user.get_tipo_usuario_display }}</small>
                             <br>
-                            <a href="{% url 'usuarios:logout' %}" class="text-warning small text-decoration-none">
+                            <a href="{% url 'logout' %}" class="text-warning small text-decoration-none">       
                                 <i class="bi bi-box-arrow-right"></i> Sair
                             </a>
                         {% else %}
-                            <a href="{% url 'usuarios:login' %}" class="text-white text-decoration-none">
+                            <a href="{% url 'login' %}" class="text-white text-decoration-none">
                                 <i class="bi bi-box-arrow-in-right"></i> Login
                             </a>
                         {% endif %}

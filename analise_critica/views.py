@@ -7,7 +7,6 @@ from .models import AnaliseCritica
 from .forms import AnaliseCriticaForm
 from simple_history.models import HistoricalRecords 
 
-#class AnaliseCriticaListView(LoginRequiredMixin, ListView):
 class AnaliseCriticaListView(ListView):
     model = AnaliseCritica
     template_name = 'analise_critica/analise_list.html'
@@ -17,7 +16,6 @@ class AnaliseCriticaListView(ListView):
     def get_queryset(self):
         return AnaliseCritica.objects.all().order_by('-data_reuniao')
 
-#class AnaliseCriticaDetailView(LoginRequiredMixin, DetailView):
 class AnaliseCriticaDetailView(DetailView):
     model = AnaliseCritica
     template_name = 'analise_critica/analise_detail.html'
@@ -35,7 +33,6 @@ class AnaliseCriticaDetailView(DetailView):
         context['temas_sst_list'] = analise._text_to_list(analise.temas_sst)
         return context
 
-#class AnaliseCriticaCreateView(LoginRequiredMixin, CreateView):
 class AnaliseCriticaCreateView(CreateView):
     model = AnaliseCritica
     form_class = AnaliseCriticaForm
@@ -52,7 +49,6 @@ class AnaliseCriticaCreateView(CreateView):
         initial['coordenador'] = self.request.user
         return initial
 
-#class AnaliseCriticaUpdateView(LoginRequiredMixin, UpdateView):
 class AnaliseCriticaUpdateView(UpdateView):
     model = AnaliseCritica
     form_class = AnaliseCriticaForm
