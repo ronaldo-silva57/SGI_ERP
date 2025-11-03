@@ -5,4 +5,10 @@ services:
     buildCommand: "./build.sh"
     startCommand: "gunicorn core.wsgi:application"
     plan: free
-    region: oregon
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        value: "sqlite:///db.sqlite3"

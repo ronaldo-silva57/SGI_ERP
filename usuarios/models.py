@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class UsuarioCustomizado(AbstractUser):
-    TIPO_USUARIO_CHOICES =[
+    TIPO_USUARIO_CHOICES = [
         ('gestor', 'Gestor da Qualidade'),
         ('auditor', 'Auditor Interno'),
         ('diretor', 'Diretor'),
@@ -14,5 +14,5 @@ class UsuarioCustomizado(AbstractUser):
     telefone = models.CharField(max_length=20, blank=True)
     data_criacao = models.DateTimeField(auto_now_add=True)
 
-    def __srt__(self):
+    def __str__(self):  # CORREÇÃO AQUI
         return f"{self.get_full_name()} - {self.get_tipo_usuario_display()}"
