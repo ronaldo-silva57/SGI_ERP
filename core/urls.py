@@ -36,11 +36,13 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     
     # ✅ Dashboard protegido
-    path('dashboard/', login_required(TemplateView.as_view(template_name='dashboard.html')), name='dashboard'),
+    #path('dashboard/', login_required(TemplateView.as_view(template_name='dashboard.html')), name='dashboard'),
+    path('dashboard/', TemplateView.as_view(template_name='dashboard.html'), name='dashboard'),
     
     # ✅ Redirecionamento da raiz para dashboard (ou login)
-    path('', login_required(TemplateView.as_view(template_name='dashboard.html')), name='home'),
-    
+    #path('', login_required(TemplateView.as_view(template_name='dashboard.html')), name='home'),
+    path('', TemplateView.as_view(template_name='dashboard.html'), name='home'),
+
     # Suas outras URLs
     path('usuarios/', include('usuarios.urls')),
     path('documentos/', include('gestao_documental.urls')),
